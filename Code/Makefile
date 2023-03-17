@@ -28,9 +28,9 @@ clean:
 # -- Regles de dependances generees automatiquement
 #
 # DO NOT DELETE THIS LINE
-projet.o: simulation.cc simulation.h
-simulation.o: simulation.h simulation.cc robot.cc robot.h particule.cc particule.h
-robot.o: robot.cc robot.h message.cc message.h particule.cc particule.h
-particule.o: particule.cc particule.h message.cc message.h shape.cc shape.h
+projet.o: projet.cc simulation.h
+simulation.o: simulation.h simulation.cc robot.h  particule.h
+robot.o: robot.cc robot.h message.h  particule.h
+particule.o: particule.cc particule.h message.h shape.h
 message.o: message.cc message.h
 shape.o: shape.cc shape.h
