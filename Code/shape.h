@@ -11,8 +11,8 @@ struct carre {S2d C; double d;};
 struct circle {S2d C; double r;};
 
 //Prototype
-bool colli_cercle(S2d C1, S2d C2, double r1, double r2);
-bool colli_carre(S2d C1, S2d C2, double d1, double d2);
+bool colli_cercle(circle C1, circle C2);
+bool colli_carre(carre S1, carre S2);
 bool colli_carre_cercle(S2d C1, double d1, S2d C2, double r2);
 
 
