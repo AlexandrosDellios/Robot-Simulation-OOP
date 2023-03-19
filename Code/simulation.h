@@ -2,9 +2,6 @@
 #define SIMULATION_H
 
 
-int habdoulila();
-
-
-
+void lecture(char* nom_fichier);
 
 #endif
