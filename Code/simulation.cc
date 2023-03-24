@@ -4,6 +4,8 @@
 #include <string>
 #include <cstdlib>
 
+#include <vector> // a enlever
+
 #include "simulation.h"
 #include "robot.h"
 #include "particule.h"
@@ -11,6 +13,11 @@
 
 using namespace std;
 
+struct Spatial{
+	double x,y;
+	int nbUpdate, nbNr, nbNs, nbNd, nbRr, nbRs;
+	vector<vector<int>> particules;
+};
 
 class Simulation{
 	
@@ -19,97 +26,74 @@ public:
 private:
 	int nbP, nbNr, nbNs, nbNd, nbRr, nbRs, nbUpdate;
 };
-
+	
+void lecture_lignes(int n, int type, ifstream& fichier, Spatial &spatial)
+{
+	if(n > 100) exit(1);
+	string line("#");
+	int nombre;
+	bool panne;
+	for(int i=0; i < n; i++)
+	{
+		while(line[0]=='#') getline(fichier >> ws,line);
+		istringstream data(line);
+		
+		switch (type)
+		{
+		case 0:
+			data >> spatial.particules[i][0];
+			data >> spatial.particules[i][1];
+			data >> spatial.particules[i][2];
+		break;
+		case 1:
+			cout<<"x"<<i<< endl;
+			cout<<"y"<<i<< endl;
+		break;
+		case 2:
+			cout<<"x"<<i<< endl;
+			cout<<"y"<<i<< endl;
+			cout<<"a"<<i<< endl;
+			cout<<"c_"<<i<< endl;
+			cout<<"panne"<<i<< endl;
+			cout<<"k_update_panne"<<i<< endl;
+		break;
+		}
+	}
+}
 
 void lecture(char* nom_fichier)
 {
-	int parametre = 0, nbP, nbR, nbN;
-	int nombre;
-	string line;
+	Spatial spatial;
+	
+	int n, nbP;
+	
+	string line("#");
 	ifstream fichier(nom_fichier);
 	if(!fichier.fail())
 	{
-		// l’appel de getline filtre aussi les séparateurs
-		while(getline(fichier >> ws,line))
-		{
-			// ligne de commentaire à ignorer, on passe à la suivante
-			if(line[0]=='#') continue;
-			cout << "line : " << line << endl;
-			istringstream data(line);
-			data >> nombre;
-			cout << "nombre " << nombre << endl;
+		getline(fichier >> ws,line);
+		while(line[0]=='#') getline(fichier >> ws,line);
+		istringstream data(line);
+		data >> nbP;
+		spatial.particules = vector<vector<int>> (nbP,vector<int>(3,0));
+		lecture_lignes(nbP, 0, fichier, spatial);	
+		
+		line = "#";
+		while(line[0]=='#') {getline(fichier >> ws,line); istringstream data(line);}
+		cout << line << endl;
+		data >> spatial.x;
+		data >> spatial.y;
+		data >> spatial.nbUpdate;
+		data >> spatial.nbNr;
+		data >> spatial.nbNs;
+		data >> spatial.nbNd;
+		data >> spatial.nbRr;
+		data >> spatial.nbNs;
+		cout << spatial.nbRs;
+		
+		lecture_lignes(spatial.nbRs, 1, fichier, spatial);
+		lecture_lignes(spatial.nbNs, 2, fichier, spatial);
 			
-			switch (parametre){
-				case 0:
-					cout << "nbP = " << nombre << endl;
-					nbP = nombre;
-					parametre ++;
-				break;
-				
-				case 1:
-					if(nbP --)
-					{
-						for(int j=0; j<3; j++)
-						{
-							cout << nombre << ' ';
-							data >> nombre;
-						}
-						cout << endl;
-					}
-					if(nbP == 0) parametre ++;
-				break;
-				
-				case 2:
-					cout << "x = " << nombre;
-					data >> nombre;
-					cout << ", y = " << nombre;
-					data >> nombre;
-					cout << ", nbUpdate = " << nombre;
-					data >> nombre;
-					cout << ", nbNr = " << nombre;
-					data >> nombre;
-					cout << ", nbNs = " << nombre;
-					nbN = nombre;
-					data >> nombre;
-					cout << ", nbNd = " << nombre;
-					data >> nombre;
-					cout << ", nbRr = " << nombre;
-					data >> nombre;
-					nbR = nombre;
-					cout << ", nbRs = " << nombre << endl;
-					
-					parametre ++;
-				break;
-				
-				case 3:
-					if(nbR --)
-					{
-						for(int j=0; j<2; j++)
-						{
-							cout << nombre << ' ';
-							data >> nombre;
-						}
-						cout << endl;
-					}
-					else parametre ++;
-				break;
-				
-				case 4:
-					if(nbN --)
-					{
-						for(int j=0; j<6; j++)
-						{
-							cout << nombre << ' ';
-							data >> nombre;
-						}
-						cout << endl;
-					}
-					else parametre ++;
-				break;		
-			}
-			
-
-		}
 		cout << "fin de la lecture" << endl;
 	}
 	else cout << "erreur lecture" << endl;
