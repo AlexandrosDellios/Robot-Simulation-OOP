@@ -31,32 +31,27 @@ void lecture(char* nom_fichier)
 		for(int i(0); i < nbP; i++)	//lecture données particules
 		{
 			do{getline(fichier >> ws,line);}while(line[0]=='#');
-			cout << line << endl;
 			particules.push_back(lecture_particule(particules, line));
 		}
 		
 		do{getline(fichier >> ws,line);}while(line[0]=='#'); //lecture robot spatial
 		data.str(line); data.clear();	//changement de string de data et reset des flags error
 		
-		cout << line << endl;
 		data >> x; data >> y; data >> nbUpdate; data >> nbNr; data >> nbNs;
 		data >> nbNd; data >> nbRr; data >> nbRs;
-		cout << x << y << nbUpdate << nbNr << nbNs << nbNd << nbRr << nbRs;
 		Spatial spatial(x,y ,nbUpdate, nbNr, nbNs, nbNd, nbRr, nbRs,
 						r_spatial ,nbNr+nbNs+nbNd, nbRr + nbRs);
-		verification_spatial(spatial);
+		verification_spatial(spatial, particules);
 		
 		for(int i(0); i < nbP; i++)	//lecture données robots reparateurs
 		{
 			do{getline(fichier >> ws,line);}while(line[0]=='#');
-			cout << line << endl;
 			lecture_robot_reparateur(spatial, particules, line);
 		}
 		
 		for(int i(0); i < nbP; i++)	//lecture données robots neutraliseurs
 		{
 			do{getline(fichier >> ws,line);}while(line[0]=='#');
-			cout << line << endl;
 			lecture_robot_neutraliseur(spatial, particules, line);
 		}
 		exit(EXIT_SUCCESS);

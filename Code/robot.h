@@ -59,6 +59,6 @@ void lecture_robot_reparateur(Spatial &spatial,vector<Particule>& particules, st
 void lecture_robot_neutraliseur(Spatial &spatial,vector<Particule>& particules, string line);
 
 void verification_robots(Spatial &spatial, vector<Particule>& particules, Circle cercle, bool type);
-void verification_spatial(Spatial &spatial);
+void verification_spatial(Spatial &spatial, vector<Particule> &particules);
 
 #endif

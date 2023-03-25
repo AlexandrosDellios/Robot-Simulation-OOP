@@ -40,7 +40,7 @@ bool shape::colli_carre_cercle(Carre S1, Circle C2, bool test){
 	else{
 		e0=0;
 	}
-	double L(sqrt(pow(((abs(C2.C.x - S1.C.x))-(S1.d/2)),2)+
+	double L(sqrt(pow((abs(C2.C.x - S1.C.x)-(S1.d/2)),2)+
 			pow(abs(C2.C.y -S1.C.y)-(S1.d/2),2)));
 	if (((abs(C2.C.x-S1.C.x) > (S1.d/2)) and (abs(C2.C.y - S1.C.y) - (S1.d/2))) 
 		and (L > (C2.r + e0))){
