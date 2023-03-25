@@ -30,9 +30,17 @@ void verification_particule(vector<Particule>& particules, Particule p)
 		cout << message::particle_too_small(c.C.x,c.C.y,c.d);
 		exit(EXIT_FAILURE);
 	}
-	
-	
-	
+	for (int i(0); i<particules.size(); ++i){
+		Carre c2 = particules[i].get_carre();
+		if ((shape::colli_carre(c,c2,false))==true){
+			cout << message::particle_superposition(c.C.x, c.C.y, c2.C.x, c2.C.x);
+			exit(EXIT_FAILURE);
+		}	
+	}
+	if((c.C.x+(c.d/2)>dmax) or (c.C.y+(c.d/2)>dmax) or (c.C.x-(c.d/2)<-dmax) or (c.C.y-(c.d/2)<-dmax)){
+		cout << message::particle_outside(c.C.x, c.C.y, c.d);
+		exit(EXIT_FAILURE);
+	}
 }
 
 Carre Particule ::get_carre(){return square;};
