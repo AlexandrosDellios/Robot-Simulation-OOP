@@ -2,7 +2,7 @@
 #include "shape.h"
 #include <cmath>
 
-using namespace std;
+using namespace shape;
 
 
 bool colli_cercle(Circle C1, Circle C2, bool test){

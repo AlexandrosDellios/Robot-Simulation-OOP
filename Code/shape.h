@@ -2,9 +2,11 @@
 #define SHAPE_H
 
 
-
-//Constante
-constexpr double epsil_zero(0.125);
+namespace shape
+{
+	//Constante
+	constexpr double epsil_zero(0.125);
+}
 
 struct S2d {double x; double y;}; 
 struct Carre {S2d C; double d;};

@@ -5,16 +5,15 @@
 #include "constante.h"
 
 class Robot{
-protected:	
+private:	
 	Circle cercle ;	
-public:
+protected:
 	Robot(double x, double y, double r) : cercle({{x,y},r}){}
-	
 };
 
 
 class Spatial : public Robot{
-protected:
+private:
 	int nbUpdate;
 	int nbNr , nbNs, nbNd;
 	int nbRr , nbRs;
@@ -29,7 +28,7 @@ public:
 };
 
 class Reparateur : public Robot{
-protected:
+private:
 	S2d but;
 	double vmax = vtran_max;
 public:
@@ -37,7 +36,7 @@ public:
 };
 
 class Neutraliseur : public Robot{
-protected:
+private:
 	double alpha;
 	int c_n,k_update;
 	bool panne;
