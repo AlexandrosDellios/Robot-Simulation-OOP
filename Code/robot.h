@@ -45,11 +45,11 @@ private:
 	int nbN;
 	int nbR;
 public:
-	Spatial(double x, double y, double r_spatial,int nbU ,int Nr, 
-	int Ns, int Nd, int Rr, int Rs, int N, int R) : 
+	Spatial(double x, double y, int nbU ,int Nr, int Ns, int Nd, int Rr, int Rs, double r_spatial,int N, int R) : 
 		Robot(x,y,r_spatial), nbUpdate(nbU), nbNr(Nr), nbNs(Ns), nbNd(Nd), 
 		nbRr(Rr), nbRs(Rs), nbN(N), nbR(R){}
 	
+	int getupdatemax();
 	vector<Reparateur> reparateurs;
 	vector<Neutraliseur> neutraliseurs;
 	
@@ -58,6 +58,7 @@ public:
 void lecture_robot_reparateur(Spatial &spatial,vector<Particule>& particules, string line);
 void lecture_robot_neutraliseur(Spatial &spatial,vector<Particule>& particules, string line);
 
-void verification_robots(Spatial &spatial, vector<Particule>& particules, Circle cercle);
+void verification_robots(Spatial &spatial, vector<Particule>& particules, Circle cercle, bool type);
+void verification_spatial(Spatial &spatial);
 
 #endif

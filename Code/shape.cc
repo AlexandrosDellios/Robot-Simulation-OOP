@@ -2,13 +2,10 @@
 #include "shape.h"
 #include <cmath>
 
-using namespace shape;
-
-
-bool colli_cercle(Circle C1, Circle C2, bool test){
+bool shape::colli_cercle(Circle C1, Circle C2, bool test){
 	double e0;
 	if (test == false){
-		e0=epsil_zero;
+		e0=shape::epsil_zero;
 	}
 	else{
 		e0=0;
@@ -20,25 +17,25 @@ bool colli_cercle(Circle C1, Circle C2, bool test){
 	return false;
 }
 
-bool colli_carre(Carre S1, Carre S2, bool test){
+bool shape::colli_carre(Carre S1, Carre S2, bool test){
 	double e0;
 	if (test == false){
-		e0=epsil_zero;
+		e0=shape::epsil_zero;
 	}
 	else{
 		e0=0;
 	}
-	if (((abs(S2.C.x - S2.C.x)) < ((S1.d/2)+(S2.d/2)+e0)) and 
+	if (((abs(S2.C.x - S1.C.x)) < ((S1.d/2)+(S2.d/2)+e0)) and 
 	((abs(S2.C.y - S1.C.y)) < ((S1.d/2)+(S2.d/2)+e0))){
 		return true;
 	}
 	return false;
 }
 
-bool colli_carre_cercle(Carre S1, Circle C2, bool test){  
+bool shape::colli_carre_cercle(Carre S1, Circle C2, bool test){  
 	double e0;
 	if (test == false){
-		e0=epsil_zero;
+		e0=shape::epsil_zero;
 	}
 	else{
 		e0=0;

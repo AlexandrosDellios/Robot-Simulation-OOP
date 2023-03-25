@@ -12,9 +12,11 @@ using namespace std;
 
 Particule lecture_particule(vector<Particule>& particules, string line)
 {
-	int x,y,d;
+	int x,y;
+	double d;
 	istringstream data(line);
 	data >> x; data >> y; data >> d;
+	cout << x << " " << y << " " << d << endl;
 	Particule p(x,y,d);
 	verification_particule(particules, p);
 	return p;
@@ -29,9 +31,9 @@ void verification_particule(vector<Particule>& particules, Particule p)
 		cout << message::particle_too_small(c.C.x,c.C.y,c.d);
 		exit(EXIT_FAILURE);
 	}
-	for (int i(0); i<particules.size(); ++i){
+	for (size_t i(0); i<particules.size(); ++i){
 		Carre c2 = particules[i].get_carre();
-		if ((shape::colli_carre(c,c2,false))==true){
+		if (shape::colli_carre(c,c2,false)){
 			cout << message::particle_superposition(c.C.x, c.C.y, c2.C.x, c2.C.x);
 			exit(EXIT_FAILURE);
 		}	
