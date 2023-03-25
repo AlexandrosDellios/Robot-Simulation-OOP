@@ -14,7 +14,6 @@ Particule lecture_particule(vector<Particule>& particules, string line)
 {
 	int x,y,d;
 	istringstream data(line);
-	cout << line;
 	data >> x; data >> y; data >> d;
 	Particule p(x,y,d);
 	verification_particule(particules, p);
