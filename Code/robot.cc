@@ -4,39 +4,42 @@
 #include "shape.h"
 #include "constante.h"
 
-/*
-void lecture_particule(int n, string line)
-{
-	if(n > 100) exit(1);
-	int nombre;
-	bool panne;
-	for(int i=0; i < n; i++)
-	{
-		while(line[0]=='#') getline(fichier >> ws,line);
-		istringstream data(line);
-		
-		switch (type)
-		{
-		case 0:
-			data >> spatial.particules[i][0];
-			data >> spatial.particules[i][1];
-			data >> spatial.particules[i][2];
-		break;
-		case 1:
-			cout<<"x"<<i<< endl;
-			cout<<"y"<<i<< endl;
-		break;
-		case 2:
-			cout<<"x"<<i<< endl;
-			cout<<"y"<<i<< endl;
-			cout<<"a"<<i<< endl;
-			cout<<"c_"<<i<< endl;
-			cout<<"panne"<<i<< endl;
-			cout<<"k_update_panne"<<i<< endl;
-		break;
-		}
-	}
-}*/
+#include <sstream>
+#include <iostream>
 
+void lecture_robot_reparateur(Spatial &spatial, vector<Particule>& particules, string line)
+{
+	int x,y;
+	cout << line << endl;
+	istringstream data(line);
+	data >> x; data >> y;
+	Reparateur robot(x,y,r_reparateur);
+	Circle cercle = robot.get_cercle();
+	verification_robots(spatial,particules, cercle);
+	spatial.reparateurs.push_back(robot);
+}
+
+void lecture_robot_neutraliseur(Spatial &spatial, vector<Particule>& particules, string line)
+{
+	int x,y,c_n,k_update_panne;
+	bool panne;
+	double a;
+	cout << line << endl;
+	istringstream data(line);
+	data >> x; data >> y;  data >> a; data >> c_n; data >> panne;  data>> k_update_panne;
+	Neutraliseur robot(x,y,r_neutraliseur,a,c_n,panne, k_update_panne);
+	Circle cercle = robot.get_cercle();
+	verification_robots(spatial,particules, cercle);
+	spatial.neutraliseurs.push_back(robot);
+}
+
+void verification_robots(Spatial &spatial, vector<Particule>& particules, Circle cercle)
+{
+	
+	
+	
+}
+
+Circle Robot::get_cercle(){return cercle;};
 
 
