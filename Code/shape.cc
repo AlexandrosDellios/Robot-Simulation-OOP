@@ -5,7 +5,7 @@
 using namespace std;
 
 
-bool colli_cercle(circle C1, circle C2, bool test){
+bool colli_cercle(Circle C1, Circle C2, bool test){
 	double e0;
 	if (test == false){
 		e0=epsil_zero;
@@ -20,7 +20,7 @@ bool colli_cercle(circle C1, circle C2, bool test){
 	return false;
 }
 
-bool colli_carre(carre S1, carre S2, bool test){
+bool colli_carre(Carre S1, Carre S2, bool test){
 	double e0;
 	if (test == false){
 		e0=epsil_zero;
@@ -35,7 +35,7 @@ bool colli_carre(carre S1, carre S2, bool test){
 	return false;
 }
 
-bool colli_carre_cercle(carre S1, circle C2, bool test){  
+bool colli_carre_cercle(Carre S1, Circle C2, bool test){  
 	double e0;
 	if (test == false){
 		e0=epsil_zero;

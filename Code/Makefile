@@ -30,7 +30,7 @@ clean:
 # DO NOT DELETE THIS LINE
 projet.o: projet.cc simulation.h
 simulation.o: simulation.h simulation.cc robot.h  particule.h
-robot.o: robot.cc robot.h message.h  particule.h
+robot.o: robot.cc robot.h message.h  particule.h shape.h constante.h
 particule.o: particule.cc particule.h message.h shape.h
 message.o: message.cc message.h
 shape.o: shape.cc shape.h
