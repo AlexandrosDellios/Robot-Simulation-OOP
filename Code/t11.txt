@@ -1,5 +1,5 @@
 #
-# error : Particle at (-100.000000;100.000000) of size 20.000000 and robot at (-105.000000;102.000000) of radius 2.000000 are in superposition
+# error : Particle at (-100.000000;100.000000) of size 20.000000 and robot at (-100.0000000;95.000000) of radius 4.000000 are in superposition
 #
 
 3

@@ -14,6 +14,13 @@
 
 using namespace std;
 
+class Simulation
+{
+	public:
+		vector<Particule> particules;
+		Spatial spatial;
+};
+
 void lecture(char* nom_fichier)
 {
 	vector<Particule> particules;
@@ -55,6 +62,8 @@ void lecture(char* nom_fichier)
 			lecture_robot_neutraliseur(spatial, particules, line);
 		}
 		exit(EXIT_SUCCESS);
+		
+		Simulation sim = {particules, spatial};
 	}
 	else exit(EXIT_FAILURE);
 }
