@@ -2,6 +2,10 @@
 // Version 1.2: fonctions supplémentaire pour indiquer le succès de la lecture 
 // Version 1.1: 9 fonctions de messages d'erreurs à utiliser pour le projet 
 // 
+/* Projet Propre en ordre 2023
+ * Leo Sierra 341942
+ * Alexandros Dellios 355873
+*/
 
 #include "message.h"
 

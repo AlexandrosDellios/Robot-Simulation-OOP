@@ -7,8 +7,8 @@ OFILES = simulation.o shape.o robot.o projet.o particule.o message.o
 
 # Definition de la premiere regle
 
-prog: $(OFILES)
-	$(CXX) $(OFILES) -o prog
+projet: $(OFILES)
+	$(CXX) $(OFILES) -o projet
 
 # Definitions de cibles particulieres
 
@@ -22,15 +22,15 @@ depend:
 
 clean:
 	@echo " *** EFFACE MODULES OBJET ET EXECUTABLE ***"
-	@/bin/rm -f *.o *.x *.cc~ *.h~ prog
-
+	@/bin/rm -f *.o *.x *.cc~ *.h~ projet
 #
 # -- Regles de dependances generees automatiquement
 #
 # DO NOT DELETE THIS LINE
-projet.o: projet.cc simulation.h
-simulation.o: simulation.h simulation.cc robot.h  particule.h
-robot.o: robot.cc robot.h message.h  particule.h shape.h
-particule.o: particule.cc particule.h message.h shape.h
-message.o: message.cc message.h
+simulation.o: simulation.cc simulation.h robot.h shape.h particule.h \
+ constante.h
 shape.o: shape.cc shape.h
+robot.o: robot.cc robot.h shape.h particule.h message.h constante.h
+projet.o: projet.cc simulation.h robot.h shape.h particule.h
+particule.o: particule.cc particule.h shape.h message.h constante.h
+message.o: message.cc message.h

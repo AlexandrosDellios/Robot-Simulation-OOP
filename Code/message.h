@@ -1,3 +1,8 @@
+/* Projet Propre en ordre 2023
+ * Leo Sierra 341942
+ * Alexandros Dellios 355873
+*/
+
 #ifndef MESSAGE_H_INCLUDED
 #define MESSAGE_H_INCLUDED
 
