@@ -28,7 +28,7 @@ clean:
 #
 # DO NOT DELETE THIS LINE
 simulation.o: simulation.cc simulation.h robot.h shape.h particule.h \
- constante.h
+ constante.h message.h
 shape.o: shape.cc shape.h
 robot.o: robot.cc robot.h shape.h particule.h message.h constante.h
 projet.o: projet.cc simulation.h robot.h shape.h particule.h

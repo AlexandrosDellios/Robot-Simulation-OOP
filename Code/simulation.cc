@@ -8,12 +8,14 @@
 #include <string>
 #include <cstdlib>
 #include <vector>
+#include <iostream>
 
 #include "simulation.h"
 #include "robot.h"
 #include "particule.h"
 #include "constante.h"
 #include "shape.h"
+#include "message.h"
 
 using namespace std;
 
@@ -60,9 +62,10 @@ void lecture(char* nom_fichier)
 			lecture_robot_neutraliseur(spatial, particules, line 
 										,reparateurs, neutraliseurs);
 		}
-		exit(EXIT_SUCCESS);
 		
 		Simulation sim(particules, spatial, reparateurs, neutraliseurs);
+		cout << message::success();
+		exit(EXIT_SUCCESS);
 	}
 	else exit(EXIT_FAILURE);
 }
