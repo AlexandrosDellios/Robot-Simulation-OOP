@@ -1,11 +1,24 @@
 # Definitions de macros
 
+#compilateur
 CXX     = g++
-CXXFLAGS = -g -Wall -std=c++11
-CXXFILES = simulation.cc shape.cc robot.cc projet.cc particule.cc message.cc
-OFILES = simulation.o shape.o robot.o projet.o particule.o message.o
+#options de compilation
+CXXFLAGS = -Wall -std=c++17
+LINKING = `pkg-config --cflags gtkmm-4.0`
+#options de liaisons
+LDLIBS = `pkg-config --libs gtkmm-4.0`
+#fichiers sources
+CXXFILES = simulation.cc shape.cc robot.cc particule.cc message.cc
+#fichiers objets générés
+OFILES = simulation.o shape.o robot.o projet.o particule.o message.o gui.o \
+ graphic.o
+
+#Nom de l'executable
+OUT = projet
 
 # Definition de la premiere regle
+
+all: $(OUT)
 
 projet: $(OFILES)
 	$(CXX) $(OFILES) -o projet
@@ -23,6 +36,18 @@ depend:
 clean:
 	@echo " *** EFFACE MODULES OBJET ET EXECUTABLE ***"
 	@/bin/rm -f *.o *.x *.cc~ *.h~ projet
+	
+
+#dependances qui utilisent gtkmm
+projet.o: projet.cc simulation.h robot.h shape.h particule.h gui.h
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
+
+gui.o: gui.cc gui.h
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
+
+$(OUT): $(OFILES)
+	$(CXX) $(CXXFLAGS) $(LINKING) $(OFILES) -o $@ $(LDLIBS)
+	
 #
 # -- Regles de dependances generees automatiquement
 #
@@ -31,6 +56,5 @@ simulation.o: simulation.cc simulation.h robot.h shape.h particule.h \
  constante.h message.h
 shape.o: shape.cc shape.h
 robot.o: robot.cc robot.h shape.h particule.h message.h constante.h
-projet.o: projet.cc simulation.h robot.h shape.h particule.h
 particule.o: particule.cc particule.h shape.h message.h constante.h
 message.o: message.cc message.h

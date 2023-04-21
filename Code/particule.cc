@@ -3,15 +3,15 @@
  * Alexandros Dellios 355873
 */
 
-#include "particule.h"
-#include "message.h"
-#include "shape.h"
-#include "constante.h"
-
 #include <sstream>
 #include <vector>
 #include <string>
 #include <iostream>
+
+#include "particule.h"
+#include "message.h"
+#include "shape.h"
+#include "constante.h"
 
 using namespace std;
 

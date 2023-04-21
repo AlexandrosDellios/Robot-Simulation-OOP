@@ -3,14 +3,14 @@
  * Alexandros Dellios 355873
 */
 
+#include <sstream>
+#include <iostream>
+
 #include "robot.h"
 #include "particule.h"
 #include "message.h"
 #include "shape.h"
 #include "constante.h"
-
-#include <sstream>
-#include <iostream>
 
 void lecture_robot_reparateur(vector<Particule>& particules , string line
 	, vector<Reparateur>& reparateurs, vector<Neutraliseur>& neutraliseurs)

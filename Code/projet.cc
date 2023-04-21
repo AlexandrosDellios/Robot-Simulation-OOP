@@ -4,8 +4,10 @@
 */
 
 #include <iostream>
+#include <gtkmm/application.h>
 
 #include "simulation.h"
+#include "gui.h"
 
 using namespace std;
 
@@ -15,11 +17,13 @@ int main(int argc, char * argv[])
 	if(argc != 2)
 	{
 		cout << "pas de fichier passé pour la lecture" << endl;
-		return 0;
 	}
-	lecture(argv[1]);
+	else lecture(argv[1]);
+	
+	auto app = Gtk::Application::create();
 
-	return 0;
+	return app->make_window_and_run<Fenetre>(1, argv);
+
 }
 
 

@@ -6,11 +6,11 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
-#include "shape.h"
-#include "particule.h"
-
 #include <vector>
 #include <string>
+
+#include "shape.h"
+#include "particule.h"
 
 using namespace std;
 

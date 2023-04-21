@@ -3,8 +3,9 @@
  * Alexandros Dellios 355873
 */
 
-#include "shape.h"
 #include <cmath>
+
+#include "shape.h"
 
 bool shape::colli_cercle(Cercle C1, Cercle C2, bool test)
 {

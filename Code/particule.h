@@ -6,9 +6,10 @@
 #ifndef PARTICULE_H
 #define PARTICULE_H
 
-#include "shape.h"
 #include <string>
 #include <vector>
+#include "shape.h"
+
 using namespace std;
 
 class Particule

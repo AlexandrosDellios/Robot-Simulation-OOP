@@ -65,9 +65,17 @@ void lecture(char* nom_fichier)
 		
 		Simulation sim(particules, spatial, reparateurs, neutraliseurs);
 		cout << message::success();
-		exit(EXIT_SUCCESS);
 	}
-	else exit(EXIT_FAILURE);
+	else
+	{
+		cout << "erreur dans l'ouverture du fichier" << endl;
+		
+	}
+}
+
+void sauvegarde()
+{
+	cout << "save" << endl;
 }
 
 

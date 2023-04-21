@@ -33,4 +33,6 @@ public :
 
 void lecture(char* nom_fichier);
 
+void sauvegarde();
+
 #endif
