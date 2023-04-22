@@ -44,9 +44,14 @@ projet.o: projet.cc simulation.h robot.h shape.h particule.h gui.h
 
 gui.o: gui.cc gui.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
+	
+graphic.o: graphic.cc graphic.h graphic_gui.h 
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
 
 $(OUT): $(OFILES)
 	$(CXX) $(CXXFLAGS) $(LINKING) $(OFILES) -o $@ $(LDLIBS)
+	
+
 	
 #
 # -- Regles de dependances generees automatiquement
