@@ -3,6 +3,36 @@
 
 #include <gtkmm.h>
 
+struct Frame // Model Framing and window parameters
+{
+	double xMin; // frame parameters
+	double xMax;
+	double yMin;
+	double yMax;
+	double asp;  // frame aspect ratio
+	int height;  // window height
+	int width;   // window width
+};
+
+class MyArea : public Gtk::DrawingArea
+{
+public:
+	MyArea();
+	virtual ~MyArea();
+	
+	void clear();
+	void draw();
+    void setFrame(Frame x); 
+    void adjustFrame(int width, int height);
+
+protected:
+	void on_draw(const Cairo::RefPtr<Cairo::Context>& cr,int width, int height);
+
+private:
+    Frame frame;
+	bool empty;
+};
+
 class Fenetre : public Gtk::Window
 {
 public:
@@ -27,8 +57,7 @@ protected:
 	Gtk::Frame Frame_Buttons, Frame_Infos;
 	
 	//Boxes
-	Gtk::Box Main_Box, Infos_Box, Label_Box, Data_Box, UI_Box, Buttons_Box, 
-		Simulation_Box;
+	Gtk::Box Main_Box, Infos_Box, Label_Box, Data_Box, UI_Box, Buttons_Box;
 	
 	//Buttons
 	Gtk::Button Button_Exit, Button_Open, Button_Save, Button_Start,
@@ -55,8 +84,9 @@ protected:
 	// to store a single timer disconnect request
 	bool disconnect; 
 	
-	const int timeout_value; 
+	const int timeout_value;
+	MyArea m_area;
+	
 };
-
 #endif
 

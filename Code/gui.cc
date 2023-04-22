@@ -1,6 +1,156 @@
 #include <iostream>
+#include <cairomm/context.h>
 #include "gui.h"
 #include "simulation.h"
+#include "graphic_gui.h"
+
+////////////////////////////////////////////
+
+// default Model Framing and window parameters
+static Frame default_frame = {-150., 150., -100., 100., 1.5, 300, 200}; 
+
+constexpr int area_side(200);
+
+static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame);
+static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr, 
+									Frame frame);
+
+MyArea::MyArea(): empty(false)
+{
+	set_content_width(area_side);
+	set_content_height(area_side);
+	
+	set_draw_func(sigc::mem_fun(*this, &MyArea::on_draw));
+}
+
+MyArea::~MyArea()
+{
+}
+
+void MyArea::clear()
+{
+	empty = true; 
+	queue_draw();
+}
+
+void MyArea::draw()
+{
+	empty = false;
+	queue_draw();
+}
+
+// defining the Model space frame to visualize in the window canvas
+void MyArea::setFrame(Frame f)
+{
+	if((f.xMin <= f.xMax) and (f.yMin <= f.yMax) and (f.height > 0))
+	{
+		f.asp = f.width/f.height;
+		frame = f;
+	}
+	else
+		std::cout << "incorrect Model framing or window parameters" << std::endl;
+} 
+
+void MyArea::adjustFrame(int width, int height)
+{
+	frame.width  = width;
+	frame.height = height;
+
+	// Preventing distorsion by adjusting the frame (cadrage)
+	// to have the same proportion as the graphical area
+	
+    // use the reference framing as a guide for preventing distortion
+    double new_aspect_ratio((double)width/height);
+    if( new_aspect_ratio > default_frame.asp)
+    { // keep yMax and yMin. Adjust xMax and xMin
+	    frame.yMax = default_frame.yMax ;
+	    frame.yMin = default_frame.yMin ;	
+	  
+	    double delta(default_frame.xMax - default_frame.xMin);
+	    double mid((default_frame.xMax + default_frame.xMin)/2);
+        // the new frame is centered on the mid-point along X
+	    frame.xMax = mid + 0.5*(new_aspect_ratio/default_frame.asp)*delta ;
+	    frame.xMin = mid - 0.5*(new_aspect_ratio/default_frame.asp)*delta ;		  	  
+    }
+    else
+    { // keep xMax and xMin. Adjust yMax and yMin
+	    frame.xMax = default_frame.xMax ;
+	    frame.xMin = default_frame.xMin ;
+	  	  
+ 	    double delta(default_frame.yMax - default_frame.yMin);
+	    double mid((default_frame.yMax + default_frame.yMin)/2);
+        // the new frame is centered on the mid-point along Y
+	    frame.yMax = mid + 0.5*(default_frame.asp/new_aspect_ratio)*delta ;
+	    frame.yMin = mid - 0.5*(default_frame.asp/new_aspect_ratio)*delta ;		  	  
+    }
+}
+
+
+
+
+void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height)
+{
+	graphic_set_context(cr);
+	if(not empty)   // drawing in the Model space
+	{
+		// adjust the frame (cadrage) to prevent distortion 
+		adjustFrame(width, height);
+		draw_frame(cr, frame);
+		orthographic_projection(cr, frame); // set the transformation MODELE to GTKmm
+	
+		//set width and color
+		cr->set_line_width(1);
+		cr->set_source_rgb(0.2, 0.2, 0.2);
+	
+		//Now we can draw directly in the Model space
+		cr->move_to(-100,100);
+		cr->line_to(-100,-100);
+		cr->line_to(100,-100);
+		cr->line_to(100,100);
+		cr->line_to(-100,100);
+		cr->stroke();
+		
+		graphic_draw_circle(20, -20, -30, LIGHT_BLUE, FILLED,LIGHT_BLUE,true);
+		graphic_draw_circle(20, 20, -30, LIGHT_BLUE, FILLED,LIGHT_BLUE,true);
+		graphic_draw_square(38, 0, 0, LIGHT_BLUE, FILLED,LIGHT_BLUE);
+		graphic_draw_square(38, 0, 25, LIGHT_BLUE, FILLED,LIGHT_BLUE);
+		graphic_draw_circle(20, 0, 50, LIGHT_BLUE, FILLED,LIGHT_BLUE,true);
+		cr->set_line_width(5);
+		cr->set_source_rgb(0, 0, 0);
+		cr->move_to(0,50);
+		cr->line_to(0,70);
+		cr->stroke();
+	}
+	else
+	{
+		std::cout << "Empty !" << std::endl;
+	}
+}
+static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame)
+{
+	//display a rectangular frame around the drawing area
+	cr->set_line_width(10.0);
+	// draw greenish lines
+	cr->set_source_rgb(0., 0.7, 0.2);
+	cr->rectangle(0,0, frame.width, frame.height);
+	cr->stroke();
+}
+static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr, 
+								    Frame frame)
+{
+	// déplace l'origine au centre de la fenêtre
+	cr->translate(frame.width/2, frame.height/2);
+  
+	// normalise la largeur et hauteur aux valeurs fournies par le cadrage
+	// ET inverse la direction de l'axe Y
+	cr->scale(frame.width/(frame.xMax - frame.xMin), 
+             -frame.height/(frame.yMax - frame.yMin));
+  
+	// décalage au centre du cadrage
+	cr->translate(-(frame.xMin + frame.xMax)/2, -(frame.yMin + frame.yMax)/2);
+}
+
+/////////////////////////////////////////////////////////////////////////////
 
 Fenetre::Fenetre():
 	
@@ -9,7 +159,6 @@ Fenetre::Fenetre():
 	
 	Main_Box(Gtk::Orientation::HORIZONTAL, 0),
 	UI_Box(Gtk::Orientation::VERTICAL, 0),
-	Simulation_Box(Gtk::Orientation::VERTICAL, 1),
 	Buttons_Box(Gtk::Orientation::VERTICAL, 1),
 	Infos_Box(Gtk::Orientation::HORIZONTAL, 100),
 	Label_Box(Gtk::Orientation::VERTICAL, 0),
@@ -56,8 +205,9 @@ robots neutraliseurs en réserve:"),
 
 void Fenetre::create_boxes()
 {
+	
 	Main_Box.append(UI_Box);
-	Main_Box.append(Simulation_Box);
+	Main_Box.append(m_area);
 	UI_Box.append(Frame_Buttons);
 	UI_Box.append(Frame_Infos);
 	
@@ -65,13 +215,15 @@ void Fenetre::create_boxes()
 	Infos_Box.append(Data_Box);
 	
 	// allow the Simulation to expand to the window size
-	Simulation_Box.set_expand();
+	m_area.set_expand();
+	
 	
 	Frame_Buttons.set_label_align(Gtk::Align::START);
 	Frame_Buttons.set_child(Buttons_Box);
 	
 	Frame_Infos.set_label_align(Gtk::Align::START);
 	Frame_Infos.set_child(Infos_Box);
+	
 	
 	Label_Box.append(data_label);
 	
@@ -197,11 +349,6 @@ void Fenetre::on_button_clicked_step()
 	on_timeout();
 }
 
-void Fenetre::on_button_quit()
-{
-  hide();
-}
-
 void Fenetre::on_button_add_timer()
 {
 	if(not timer_added)
@@ -252,5 +399,4 @@ bool Fenetre::on_timeout()
 	data_nbNr.set_text(std::to_string(data.nbNr));
 	
 	++maj;
-	return true; 
 }

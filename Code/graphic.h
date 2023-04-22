@@ -14,9 +14,8 @@ constexpr RGB GREEN = {0,0.5,0};
 constexpr bool FILLED (true);
 
 void graphic_draw_square(const double cote, double xc, double yc, RGB color, 
-bool fill,RGB colorb);
+							bool fill,RGB colorb);
 void graphic_draw_circle(const double rayon, double xc, double yc, RGB color, 
-bool fill,RGB colorb,bool robotNeut);
+							bool fill,RGB colorb,bool robotNeut);
 
 #endif // GTKMM_EXAMPLE_GRAPHIC_H
-
