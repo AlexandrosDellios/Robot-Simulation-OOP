@@ -1,0 +1,26 @@
+# 
+#
+# nombre de particules puis les données d'une particule par ligne
+nbP
+   x0 y0 d0
+   x1 y1 d1
+   x2 y2 d2
+   x3 y3 d3
+   x4 y4 d4
+
+# données du robot spatial
+x y nbUpdate nbNr nbNs nbNd nbRr nbRs
+
+# données des nbRsrobots réparateurs en service (un par ligne)
+   x0 y0
+   x1 y1
+   x2 y2
+   x3 y3
+   x4 y4
+
+# données des nbNsrobots neutraliseurs en service (un par ligne)
+   x0 y0 a0 c_0 panne0 k_update_panne0
+   x1 y1 a1 c_1 panne1 k_update_panne1
+   x2 y2 a2 c_2 panne2 k_update_panne2
+   x3 y3 a3 c_3 panne3 k_update_panne3
+   x4 y4 a4 c_4 panne4 k_update_panne4

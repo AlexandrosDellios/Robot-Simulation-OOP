@@ -14,11 +14,12 @@ using namespace std;
 // lit le fichier dont le nom est transmis sur la ligne de commande
 int main(int argc, char * argv[])
 {
+	
 	if(argc != 2)
 	{
 		cout << "pas de fichier passé pour la lecture" << endl;
 	}
-	else lecture(argv[1]);
+	else simulation::lecture(argv[1]);
 	
 	auto app = Gtk::Application::create();
 
