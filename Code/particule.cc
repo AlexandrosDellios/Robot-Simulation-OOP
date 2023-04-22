@@ -53,5 +53,12 @@ void verification_particule(vector<Particule>& particules, Particule p)
 
 Carre Particule::get_carre(){return carre;};
 
+void draw_particule(vector<Particule>& particule,int nbP){
+	for (int i(0); i < nbP; ++i){
+		Carre c = particule[i].get_carre();
+		shape::draw_parti(c.d,c.C.x,c.C.y);
+	}
+}
+
 
 

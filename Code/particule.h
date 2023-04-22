@@ -24,6 +24,7 @@ public:
 Particule lecture_particule(vector<Particule>& particules, string line);
 
 void verification_particule(vector<Particule>& particules, Particule p);
+void draw_particule(vector<Particule>& particules,int nbP);
 
 
 #endif

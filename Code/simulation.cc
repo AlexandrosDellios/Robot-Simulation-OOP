@@ -115,3 +115,11 @@ Data simulation::get_data()
 	return data;
 }
 
+void simulation::draw_all_Robots(vector<Reparateur>& reparateurs, vector<Neutraliseur>& neutraliseurs, 
+Spatial& spatial,vector<Particule>& particules, int nbR, int nbN, int nbP){
+	draw_Robot(reparateurs,nbR);
+	draw_Robot(neutraliseurs,nbN);
+	draw_Robot(spatial);
+	draw_particule(particules, nbP);
+}
+

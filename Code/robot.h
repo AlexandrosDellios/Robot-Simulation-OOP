@@ -42,6 +42,8 @@ private:
 public:
 	Neutraliseur(double x, double y, double r, double a, int c,bool p, int k) : 
 		Robot(x,y,r), alpha(a), c_n(c), panne(p),k_update(k){};
+	double alpha_get();
+	bool panne_get();
 };
 
 class Spatial : public Robot
@@ -74,5 +76,8 @@ void verification_robots(vector<Particule>& particules, Cercle c, bool type
 		//le type de robot représente neutraliseur : 1 et réparateur : 0
 
 void verification_spatial(Spatial &spatial, vector<Particule> &particules);
+void draw_Robot(vector<Neutraliseur>& robot,int nb);
+void draw_Robot(vector<Reparateur>& robot, int nb);
+void draw_Robot(Spatial& robot);
 
 #endif

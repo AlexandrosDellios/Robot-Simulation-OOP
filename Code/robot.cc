@@ -109,4 +109,31 @@ void verification_robots(vector<Particule>& particules, Cercle c, bool type
 Cercle Robot::get_cercle(){return cercle;};
 int Spatial::getupdatemax(){return nbUpdate;};
 
+double Neutraliseur::alpha_get(){
+	return alpha;
+}
+
+bool Neutraliseur::panne_get(){
+	return panne;
+}
+
+void draw_Robot(vector<Reparateur>& robot, int nb){
+	for (int i(0); i < nb; ++i){
+		Cercle c = robot[i].get_cercle();
+		shape::draw_robotRep(c.r,c.C.x, c.C.y);
+	}
+}
+
+void draw_Robot(vector<Neutraliseur>& robot, int nb){
+	for (int i(0); i < nb; ++i){
+		Cercle c = robot[i].get_cercle();
+		double alpha = robot[i].alpha_get();
+		bool panne = robot[i].panne_get();
+		shape::draw_robotNeut(c.r,c.C.x, c.C.y, alpha, panne);
+	}
+}
+void draw_Robot(Spatial& robot){
+	Cercle c = robot.get_cercle();
+	shape::draw_robotSpa(c.r,c.C.x,c.C.y);
+}
 

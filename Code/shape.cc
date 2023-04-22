@@ -4,8 +4,8 @@
 */
 
 #include <cmath>
-
 #include "shape.h"
+#include "graphic.h"
 
 bool shape::colli_cercle(Cercle C1, Cercle C2, bool test)
 {
@@ -43,4 +43,22 @@ bool shape::colli_carre_cercle(Carre S1, Cercle C2, bool test)
 	else if ((abs(C2.C.x - S1.C.x) < ((S1.d/2)+C2.r+e0)) 
 				and (abs(C2.C.y - S1.C.y) < ((S1.d/2)+C2.r+e0))) return true;		
 	return false;
+}
+
+void shape::draw_robotNeut(double rayon, double xc, double yc, double alpha, bool panne){
+	if (panne == true){
+		graphic_draw_circle(rayon,xc,yc,ORANGE,UNFILLED,WHITE,true);
+	}
+	if (panne == false){
+		graphic_draw_circle(rayon,xc,yc,BLACK,UNFILLED,WHITE,true);
+	}
+}
+void shape::draw_robotRep(double rayon, double xc, double yc){
+	graphic_draw_circle(rayon,xc,yc,BLACK,FILLED,GREEN,false);
+}
+void shape::draw_robotSpa(double rayon, double xc, double yc){
+	graphic_draw_circle(rayon,xc,yc,LIGHT_BLUE,UNFILLED,WHITE,false);
+}
+void shape::draw_parti(double cote, double xc, double yc){
+	graphic_draw_square(cote,xc,yc,RED,FILLED,GREY);
 }

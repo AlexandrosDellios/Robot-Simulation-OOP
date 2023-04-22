@@ -12,10 +12,12 @@ constexpr RGB ORANGE = {0.9,0.5,0.1};
 constexpr RGB GREEN = {0,0.5,0};
 
 constexpr bool FILLED (true);
+constexpr bool UNFILLED (false);
 
-void graphic_draw_square(const double cote, double xc, double yc, RGB color, 
+
+void graphic_draw_square(double cote, double xc, double yc, RGB color, 
 							bool fill,RGB colorb);
-void graphic_draw_circle(const double rayon, double xc, double yc, RGB color, 
+void graphic_draw_circle(double rayon, double xc, double yc, RGB color, 
 							bool fill,RGB colorb,bool robotNeut);
 
 #endif // GTKMM_EXAMPLE_GRAPHIC_H
