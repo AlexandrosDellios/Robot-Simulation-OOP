@@ -18,21 +18,31 @@ private :
 	Spatial spatial;
 	vector<Reparateur> reparateurs;
 	vector<Neutraliseur> neutraliseurs;
+	string filename;
 	
 public :
 	Simulation(vector<Particule> p, Spatial s, vector<Reparateur> r
-										, vector<Neutraliseur> n) :
-		particules(p), spatial(s), reparateurs(r), neutraliseurs(n){}
+									, vector<Neutraliseur> n, string f) :
+		particules(p), spatial(s), reparateurs(r),neutraliseurs(n),filename(f){}
 	
 	vector<Particule>& get_particules(){return particules;};
 	Spatial& get_spatial(){return spatial;};
 	vector<Reparateur>& get_reparateurs(){return reparateurs;};
 	vector<Neutraliseur>& get_neutraliseurs(){return neutraliseurs;};
+	string get_filename(){return filename;};
 };
 
+struct Data
+{
+	unsigned int p, nbRs, nbRr, nbNs, nbNp, nbNd, nbNr;
+};
 
-void lecture(char* nom_fichier);
-
-void sauvegarde();
+namespace simulation
+{
+	void lecture(char* nom_fichier);
+	void sauvegarde();
+	void mise_a_jour();
+	Data get_data();
+}
 
 #endif

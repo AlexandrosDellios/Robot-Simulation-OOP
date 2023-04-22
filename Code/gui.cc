@@ -6,40 +6,34 @@ Fenetre::Fenetre():
 	
 	Frame_Buttons("General"),
 	Frame_Infos("info : nombre de ..."),
-	Frame_Simulation("Propre en Ordre"),
 	
 	Main_Box(Gtk::Orientation::HORIZONTAL, 0),
+	UI_Box(Gtk::Orientation::VERTICAL, 0),
+	Simulation_Box(Gtk::Orientation::VERTICAL, 1),
 	Buttons_Box(Gtk::Orientation::VERTICAL, 1),
-	Infos_Box(Gtk::Orientation::VERTICAL, 1),
-	UI_Box(Gtk::Orientation::VERTICAL, 2),
-	Simulation_Box(Gtk::Orientation::VERTICAL, 2),
+	Infos_Box(Gtk::Orientation::HORIZONTAL, 100),
+	Label_Box(Gtk::Orientation::VERTICAL, 0),
+	Data_Box(Gtk::Orientation::VERTICAL, 0),
+	
+	data_maj("0"), data_particules("0"), data_nbNr("0"), data_nbNs("0"), 
+	data_nbNd("0"), data_nbRr("0"), data_nbRs("0"), data_nbNp("0"),
+	data_label("mises à jour:\nparticules:\nrobots réparateurs en service:\n\
+robots réparateurs en réserve:\nrobots neutraliseurs en service:\n\
+robots neutraliseurs en panne:\nrobots neutraliseurs détruits:\n\
+robots neutraliseurs en réserve:"),
 	
 	Button_Exit("exit"), Button_Open("open"), Button_Save("save"),
-	Button_Start("start"), Button_Step("step")
+	Button_Start("start"), Button_Step("step"),
+	
+	timer_added(false),// to handle a single timer
+	disconnect(false), // to handle a single timer
+	timeout_value(500) // 500 ms = 0.5 seconds
 {
-	set_title("Keyboard Events");
+	set_title("Propre en Ordre");
 	set_resizable(true);
 	set_child(Main_Box);
 	
-	Buttons_Box.set_size_request(150, -1);
-	
-	Main_Box.append(UI_Box);
-	UI_Box.append(Frame_Buttons);
-	UI_Box.append(Frame_Infos);
-	Main_Box.append(Simulation_Box);
-	Simulation_Box.append(Frame_Simulation);
-	
-	Frame_Buttons.set_label_align(Gtk::Align::START);
-	Frame_Buttons.set_child(Buttons_Box);
-	
-	Frame_Infos.set_label_align(Gtk::Align::START);
-	Frame_Infos.set_child(Infos_Box);
-	
-	Buttons_Box.append(Button_Exit);
-	Buttons_Box.append(Button_Open);
-	Buttons_Box.append(Button_Save);
-	Buttons_Box.append(Button_Start);
-	Buttons_Box.append(Button_Step);
+	create_boxes();
 	
 	//Handling mouse clicks on buttons
 	Button_Exit.signal_clicked().connect(
@@ -58,6 +52,44 @@ Fenetre::Fenetre():
     controller->signal_key_pressed().connect(
                   sigc::mem_fun(*this, &Fenetre::on_window_key_pressed), false);
     add_controller(controller);
+}
+
+void Fenetre::create_boxes()
+{
+	Main_Box.append(UI_Box);
+	Main_Box.append(Simulation_Box);
+	UI_Box.append(Frame_Buttons);
+	UI_Box.append(Frame_Infos);
+	
+	Infos_Box.append(Label_Box);
+	Infos_Box.append(Data_Box);
+	
+	// allow the Simulation to expand to the window size
+	Simulation_Box.set_expand();
+	
+	Frame_Buttons.set_label_align(Gtk::Align::START);
+	Frame_Buttons.set_child(Buttons_Box);
+	
+	Frame_Infos.set_label_align(Gtk::Align::START);
+	Frame_Infos.set_child(Infos_Box);
+	
+	Label_Box.append(data_label);
+	
+	Data_Box.append(data_maj);
+	Data_Box.append(data_particules);
+	Data_Box.append(data_nbRs);
+	Data_Box.append(data_nbRr);
+	Data_Box.append(data_nbNs);
+	Data_Box.append(data_nbNp);
+	Data_Box.append(data_nbNd);
+	Data_Box.append(data_nbNr);
+	
+	Buttons_Box.append(Button_Exit);
+	Buttons_Box.append(Button_Open);
+	Buttons_Box.append(Button_Save);
+	Buttons_Box.append(Button_Start);
+	Buttons_Box.append(Button_Step);
+	
 }
 
 bool Fenetre::on_window_key_pressed(guint keyval, guint, Gdk::ModifierType state)
@@ -121,7 +153,7 @@ void Fenetre::on_file_dialog_response(int response_id,
 			//Notice that this is a std::string, not a Glib::ustring.
 			auto filename = dialog->get_file()->get_basename();
 			std::cout << "File selected: " << filename << std::endl;
-			lecture(&(filename[0]));
+			simulation::lecture(&(filename[0]));
 			break;
 		}
 		case Gtk::ResponseType::CANCEL:
@@ -141,7 +173,7 @@ void Fenetre::on_file_dialog_response(int response_id,
 
 void Fenetre::on_button_clicked_save()
 {
-	sauvegarde();
+	simulation::sauvegarde();
 }
 
 void Fenetre::on_button_clicked_start()
@@ -150,15 +182,75 @@ void Fenetre::on_button_clicked_start()
 	{
 		Button_Start.set_label("stop");
 		Button_Step.set_sensitive(false);
+		on_button_add_timer();
 	}
 	else 
 	{
 		Button_Start.set_label("start");
 		Button_Step.set_sensitive(true);
+		on_button_delete_timer();
 	}
 }
 
 void Fenetre::on_button_clicked_step()
 {
-	if(Button_Step.get_sensitive()) std::cout << "step" << std::endl;
+	on_timeout();
+}
+
+void Fenetre::on_button_quit()
+{
+  hide();
+}
+
+void Fenetre::on_button_add_timer()
+{
+	if(not timer_added)
+	{	  
+		// Creation of a new object prevents long lines and shows us a little
+		// how slots work.  We have 0 parameters and bool as a return value
+		// after calling sigc::bind.
+		sigc::slot<bool()> my_slot = sigc::bind(sigc::mem_fun(*this,
+		                                        &Fenetre::on_timeout));
+		
+		// This is where we connect the slot to the Glib::signal_timeout()
+		auto conn = Glib::signal_timeout().connect(my_slot,timeout_value);
+			
+		timer_added = true;
+		
+	}
+}
+
+void Fenetre::on_button_delete_timer()
+{
+	if(timer_added)
+	{
+		disconnect  = true;   
+		timer_added = false;
+	}
+}
+
+bool Fenetre::on_timeout()
+{
+	static unsigned int maj(1);
+	
+	if(disconnect)
+	{
+		disconnect = false; // reset for next time a Timer is created
+		
+		return false; // End of Timer 
+	}
+	
+	//simulation::mise_a_jour();
+	Data data = simulation::get_data();
+	data_maj.set_text(std::to_string(maj));
+	data_particules.set_text(std::to_string(data.p));
+	data_nbRs.set_text(std::to_string(data.nbRs));
+	data_nbRr.set_text(std::to_string(data.nbRr));
+	data_nbNs.set_text(std::to_string(data.nbNs));
+	data_nbNp.set_text(std::to_string(data.nbNp));
+	data_nbNd.set_text(std::to_string(data.nbNd));
+	data_nbNr.set_text(std::to_string(data.nbNr));
+	
+	++maj;
+	return true; 
 }

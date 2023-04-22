@@ -19,7 +19,7 @@
 
 using namespace std;
 
-void lecture(char* nom_fichier)
+void simulation::lecture(char* nom_fichier)
 {
 	vector<Particule> particules;
 	vector<Reparateur> reparateurs;
@@ -63,19 +63,55 @@ void lecture(char* nom_fichier)
 										,reparateurs, neutraliseurs);
 		}
 		
-		Simulation sim(particules, spatial, reparateurs, neutraliseurs);
+		Simulation sim_copy(particules, spatial, reparateurs, neutraliseurs,
+						nom_fichier);
+		//sim = sim_copy;
 		cout << message::success();
 	}
 	else
 	{
-		cout << "erreur dans l'ouverture du fichier" << endl;
-		
+		cerr << "erreur dans l'ouverture du fichier" << endl;
 	}
 }
 
-void sauvegarde()
+void simulation::sauvegarde()
 {
-	cout << "save" << endl;
+	ofstream file("test.txt");
+	if (file.is_open())
+	{
+		file << "# " << "" << "\n#\n# nombre de particules puis les "
+		<< "données d'une particule par ligne\n" << "nbP" << "\n";
+		for(size_t i=0; i < 5; i++) 
+		{
+			file << "   " << "x" << i << " y" << i << " d" << i << "\n";
+		}
+		file << "\n# données du robot spatial\n" << "x" << " " << "y" << " "
+			 << "nbUpdate" << " " << "nbNr" << " " << "nbNs" << " " << "nbNd"
+			 << " " << "nbRr" << " " << "nbRs" << "\n\n" << "# données des nbRs"
+			 << "robots réparateurs en service (un par ligne)\n";
+		for(size_t i=0; i < 5; i++) 
+		{
+			file << "   " << "x" << i << " y" << i << "\n";
+		}
+		file << "\n# données des nbNs"
+			 << "robots neutraliseurs en service (un par ligne)\n";
+		for(size_t i=0; i < 5; i++) 
+		{
+			file << "   " << "x" << i << " y" << i << " a" << i << " c_" << i
+				 << " panne" << i << " k_update_panne" << i << "\n";
+		}
+		file.close();
+		cout << "Sauvegarde reussie" << endl;
+	}
+	else cerr << "erreur dans l'ouverture du fichier" << std::endl;
 }
 
+void simulation::mise_a_jour();
+
+Data simulation::get_data()
+{
+	Data data = {3,3,1,3,0,2,1};
+	
+	return data;
+}
 
