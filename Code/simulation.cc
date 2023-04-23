@@ -81,28 +81,41 @@ void simulation::lecture(char* nom_fichier)
 void simulation::sauvegarde()
 {
 	ofstream file(p_sim->get_filename());
+	vector<Particule> p = p_sim->get_particules();
+	vector<Reparateur> r = p_sim->get_reparateurs();
+	vector<Neutraliseur> n = p_sim->get_neutraliseurs();
+	donnees_spatial d = p_sim->get_spatial().get_donnees();
 	if (file.is_open())
 	{
-		file << "# " << "" << "\n#\n# nombre de particules puis les "
-		<< "données d'une particule par ligne\n" << "nbP" << "\n";
-		for(size_t i=0; i < (p_sim->get_particules()).size(); i++) 
+		file << "# " << p_sim->get_filename() 
+		<< "\n#\n# nombre de particules puis les "
+		<< "données d'une particule par ligne\n" << p.size() << "\n";
+		for(size_t i=0; i < p.size(); i++) 
 		{
-			file << "   " << " x" << i << " y" << i << " d" << i << "\n";
+			file << "   " << p[i].get_carre().C.x  << " " 
+			<< p[i].get_carre().C.y << " " << p[i].get_carre().d << "\n";
 		}
-		file << "\n# données du robot spatial\n" << "x" << " " << "y" << " "
-			 << "nbUpdate" << " " << "nbNr" << " " << "nbNs" << " " << "nbNd"
-			 << " " << "nbRr" << " " << "nbRs" << "\n\n" << "# données des nbRs"
-			 << "robots réparateurs en service (un par ligne)\n";
-		for(size_t i=0; i < 5; i++) 
+		file << "\n# données du robot spatial\n" 
+			 << p_sim->get_spatial().get_cercle().C.x << " "
+			 << p_sim->get_spatial().get_cercle().C.y << " " 
+			 << d.nbUpdate << " " << d.nbNr << " " << d.nbNs << " " << d.nbNd
+			 << " " << d.nbRr << " " << d.nbRs << "\n\n" << "# données des nbRs"
+			 << " robots réparateurs en service (un par ligne)\n";
+		for(size_t i=0; i < r.size(); i++) 
 		{
-			file << "   " << "x" << i << " y" << i << "\n";
+			file << "   " << r[i].get_cercle().C.x  << " " 
+			<< r[i].get_cercle().C.y << " "  << "\n";
 		}
 		file << "\n# données des nbNs"
 			 << "robots neutraliseurs en service (un par ligne)\n";
-		for(size_t i=0; i < 5; i++) 
+		for(size_t i=0; i < n.size(); i++) 
 		{
-			file << "   " << "x" << i << " y" << i << " a" << i << " c_" << i
-				 << " panne" << i << " k_update_panne" << i << "\n";
+			file << "   " << n[i].get_cercle().C.x  << " " 
+			<< n[i].get_cercle().C.y << " " << n[i].get_alpha() << " " 
+			<< n[i].get_c_n() << " ";
+			if(n[i].get_panne())file << "true";
+			else file << "false";
+			file << " " << n[i].get_k_update() << "\n";
 		}
 		file.close();
 		cout << "Sauvegarde reussie" << endl;

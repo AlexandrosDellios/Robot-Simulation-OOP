@@ -14,6 +14,15 @@
 
 using namespace std;
 
+struct donnees_spatial
+{
+	int nbUpdate;
+	int nbNr , nbNs, nbNd;
+	int nbRr , nbRs;
+	int nbN;
+	int nbR;
+};
+
 class Robot
 {
 private:	
@@ -42,26 +51,24 @@ private:
 public:
 	Neutraliseur(double x, double y, double r, double a, int c,bool p, int k) : 
 		Robot(x,y,r), alpha(a), c_n(c), panne(p),k_update(k){};
-	double alpha_get();
-	bool panne_get();
+	double get_alpha();
+	int get_c_n();
+	bool get_panne();
+	int get_k_update();
 };
 
 class Spatial : public Robot
 {
 private:
-	int nbUpdate;
-	int nbNr , nbNs, nbNd;
-	int nbRr , nbRs;
-	int nbN;
-	int nbR;
+	donnees_spatial donnees;
 	
 public:
 	Spatial(double x, double y, int nbU ,int Nr, int Ns, int Nd, int Rr, 
 			int Rs, double r_spatial,int N, int R) : 
-		Robot(x,y,r_spatial), nbUpdate(nbU), nbNr(Nr), nbNs(Ns), nbNd(Nd), 
-		nbRr(Rr), nbRs(Rs), nbN(N), nbR(R){}
-		
+		Robot(x,y,r_spatial), donnees({nbU,Nr,Ns,Nd,Rr,Rs,N,R}){}
+	
 	int getupdatemax();
+	donnees_spatial get_donnees();
 };
 
 void lecture_robot_reparateur(vector<Particule>& particules , string line

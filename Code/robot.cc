@@ -106,16 +106,16 @@ void verification_robots(vector<Particule>& particules, Cercle c, bool type
 	}
 }
 
+//"getters"
 Cercle Robot::get_cercle(){return cercle;};
-int Spatial::getupdatemax(){return nbUpdate;};
+int Spatial::getupdatemax(){return donnees.nbUpdate;};
+donnees_spatial Spatial::get_donnees(){return donnees;};
+double Neutraliseur::get_alpha(){return alpha;};
+int Neutraliseur::get_c_n(){return c_n;};
+bool Neutraliseur::get_panne(){return panne;};
+int Neutraliseur::get_k_update(){return k_update;};
 
-double Neutraliseur::alpha_get(){
-	return alpha;
-}
 
-bool Neutraliseur::panne_get(){
-	return panne;
-}
 
 void draw_Robot(vector<Reparateur>& robot, int nb){
 	for (int i(0); i < nb; ++i){
@@ -127,8 +127,8 @@ void draw_Robot(vector<Reparateur>& robot, int nb){
 void draw_Robot(vector<Neutraliseur>& robot, int nb){
 	for (int i(0); i < nb; ++i){
 		Cercle c = robot[i].get_cercle();
-		double alpha = robot[i].alpha_get();
-		bool panne = robot[i].panne_get();
+		double alpha = robot[i].get_alpha();
+		bool panne = robot[i].get_panne();
 		shape::draw_robotNeut(c.r,c.C.x, c.C.y, alpha, panne);
 	}
 }
