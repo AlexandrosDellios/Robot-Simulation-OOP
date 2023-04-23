@@ -137,6 +137,7 @@ Data simulation::get_data()
 	
 	return data;
 }
+default_random_engine Simulation::get_e(){return e;};
 
 void simulation::draw_all_Robots(){
 	draw_Robot(p_sim->get_reparateurs(),(p_sim->get_reparateurs()).size());
@@ -144,4 +145,27 @@ void simulation::draw_all_Robots(){
 	draw_Robot(p_sim->get_spatial());
 	draw_particule(p_sim->get_particules(), (p_sim->get_particules()).size());
 }
+
+void simulation::boom(){
+	vector<Particule> new_parti;
+	vector<Particule> temp_parti;
+	double p = desintegration_rate;
+	for (size_t i(0); i < p_sim->get_particules().size(); ++i){
+		bernoulli_distribution b(p/p_sim->get_particules().size());
+		default_random_engine e = p_sim->get_e();
+		if (p_sim->get_particules()[i].get_carre().d > d_particule_min + shape::epsil_zero){
+			if (b(e)){
+				p_sim->get_particules().erase(p_sim->get_particules().begin()+i);
+				temp_parti = desintegration(p_sim->get_particules()[i]);
+				for (auto i: temp_parti){
+					new_parti.push_back(i);
+				}
+			}
+		}
+	}
+	for (auto i: new_parti){
+		p_sim->get_particules().push_back(i);
+	}
+}
+
 

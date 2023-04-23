@@ -18,6 +18,8 @@ constexpr bool UNFILLED (false);
 void graphic_draw_square(double cote, double xc, double yc, RGB color, 
 							bool fill,RGB colorb);
 void graphic_draw_circle(double rayon, double xc, double yc, RGB color, 
-							bool fill,RGB colorb,bool robotNeut);
+					bool fill,RGB colorb);
+void graphic_draw_circleNeut(double rayon, double xc, double yc, RGB color, 
+					bool fill,RGB colorb, double alpha);
 
 #endif // GTKMM_EXAMPLE_GRAPHIC_H

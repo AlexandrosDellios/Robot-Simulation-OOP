@@ -7,6 +7,7 @@
 #define SIMULATION_H
 
 #include <vector>
+#include <random>
 
 #include "robot.h"
 #include "particule.h"
@@ -19,6 +20,7 @@ private :
 	vector<Reparateur> reparateurs;
 	vector<Neutraliseur> neutraliseurs;
 	string filename;
+	default_random_engine e;
 	
 public :
 	Simulation(vector<Particule> p, Spatial s, vector<Reparateur> r
@@ -30,6 +32,7 @@ public :
 	vector<Reparateur>& get_reparateurs(){return reparateurs;};
 	vector<Neutraliseur>& get_neutraliseurs(){return neutraliseurs;};
 	string get_filename(){return filename;};
+	default_random_engine get_e();
 };
 
 struct Data
@@ -44,6 +47,7 @@ namespace simulation
 	void mise_a_jour();
 	Data get_data();
 	void draw_all_Robots();
+	void boom();
 }
 
 #endif
