@@ -18,7 +18,9 @@
 #include "message.h"
 
 using namespace std;
-
+Spatial sp(0, 0, 0,0, 0, 0, 0, 0, 0,0, 0);
+Simulation sim({}, sp, {}, {},"");
+Simulation* p_sim(&sim);
 void simulation::lecture(char* nom_fichier)
 {
 	vector<Particule> particules;
@@ -65,25 +67,27 @@ void simulation::lecture(char* nom_fichier)
 		
 		Simulation sim_copy(particules, spatial, reparateurs, neutraliseurs,
 						nom_fichier);
-		//sim = sim_copy;
+		sim = sim_copy;
+		p_sim = &sim;
 		cout << message::success();
 	}
 	else
 	{
 		cerr << "erreur dans l'ouverture du fichier" << endl;
 	}
+	
 }
 
 void simulation::sauvegarde()
 {
-	ofstream file("test.txt");
+	ofstream file(p_sim->get_filename());
 	if (file.is_open())
 	{
 		file << "# " << "" << "\n#\n# nombre de particules puis les "
 		<< "données d'une particule par ligne\n" << "nbP" << "\n";
-		for(size_t i=0; i < 5; i++) 
+		for(size_t i=0; i < (p_sim->get_particules()).size(); i++) 
 		{
-			file << "   " << "x" << i << " y" << i << " d" << i << "\n";
+			file << "   " << " x" << i << " y" << i << " d" << i << "\n";
 		}
 		file << "\n# données du robot spatial\n" << "x" << " " << "y" << " "
 			 << "nbUpdate" << " " << "nbNr" << " " << "nbNs" << " " << "nbNd"
@@ -115,11 +119,10 @@ Data simulation::get_data()
 	return data;
 }
 
-void simulation::draw_all_Robots(vector<Reparateur>& reparateurs, vector<Neutraliseur>& neutraliseurs, 
-Spatial& spatial,vector<Particule>& particules, int nbR, int nbN, int nbP){
-	draw_Robot(reparateurs,nbR);
-	draw_Robot(neutraliseurs,nbN);
-	draw_Robot(spatial);
-	draw_particule(particules, nbP);
+void simulation::draw_all_Robots(){
+	draw_Robot(p_sim->get_reparateurs(),(p_sim->get_reparateurs()).size());
+	draw_Robot(p_sim->get_neutraliseurs(),(p_sim->get_neutraliseurs()).size());
+	draw_Robot(p_sim->get_spatial());
+	draw_particule(p_sim->get_particules(), (p_sim->get_particules()).size());
 }
 

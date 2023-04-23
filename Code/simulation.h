@@ -43,8 +43,7 @@ namespace simulation
 	void sauvegarde();
 	void mise_a_jour();
 	Data get_data();
-	void draw_all_Robots(vector<Reparateur>& reparateurs, vector<Neutraliseur>& neutraliseurs, 
-				Spatial& spatial,vector<Particule>& particules, int nbR, int nbN, int nbP);
+	void draw_all_Robots();
 }
 
 #endif

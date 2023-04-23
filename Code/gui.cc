@@ -111,16 +111,7 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
 		cr->line_to(-dmax,dmax);
 		cr->stroke();
 		
-		graphic_draw_circle(20, -20, -30, LIGHT_BLUE, FILLED,LIGHT_BLUE,true);
-		graphic_draw_circle(20, 20, -30, LIGHT_BLUE, FILLED,LIGHT_BLUE,true);
-		graphic_draw_square(38, 0, 0, LIGHT_BLUE, FILLED,LIGHT_BLUE);
-		graphic_draw_square(38, 0, 25, LIGHT_BLUE, FILLED,LIGHT_BLUE);
-		graphic_draw_circle(20, 0, 50, LIGHT_BLUE, FILLED,LIGHT_BLUE,true);
-		cr->set_line_width(5);
-		cr->set_source_rgb(0, 0, 0);
-		cr->move_to(0,50);
-		cr->line_to(0,70);
-		cr->stroke();
+		simulation::draw_all_Robots();
 	}
 	else
 	{
