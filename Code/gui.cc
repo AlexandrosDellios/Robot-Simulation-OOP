@@ -3,6 +3,7 @@
 #include "gui.h"
 #include "simulation.h"
 #include "graphic_gui.h"
+#include "constante.h"
 
 ////////////////////////////////////////////
 
@@ -103,11 +104,11 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
 		cr->set_source_rgb(0.2, 0.2, 0.2);
 	
 		//Now we can draw directly in the Model space
-		cr->move_to(-100,100);
-		cr->line_to(-100,-100);
-		cr->line_to(100,-100);
-		cr->line_to(100,100);
-		cr->line_to(-100,100);
+		cr->move_to(-dmax,dmax);
+		cr->line_to(-dmax,-dmax);
+		cr->line_to(dmax,-dmax);
+		cr->line_to(dmax,dmax);
+		cr->line_to(-dmax,dmax);
 		cr->stroke();
 		
 		graphic_draw_circle(20, -20, -30, LIGHT_BLUE, FILLED,LIGHT_BLUE,true);
