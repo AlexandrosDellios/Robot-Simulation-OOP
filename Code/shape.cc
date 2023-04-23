@@ -47,17 +47,17 @@ bool shape::colli_carre_cercle(Carre S1, Cercle C2, bool test)
 
 void shape::draw_robotNeut(double rayon, double xc, double yc, double alpha, bool panne){
 	if (panne == true){
-		graphic_draw_circle(rayon,xc,yc,ORANGE,UNFILLED,WHITE,true);
+		graphic_draw_circleNeut(rayon,xc,yc,ORANGE,UNFILLED,WHITE,alpha);
 	}
 	if (panne == false){
-		graphic_draw_circle(rayon,xc,yc,BLACK,UNFILLED,WHITE,true);
+		graphic_draw_circleNeut(rayon,xc,yc,BLACK,UNFILLED,WHITE,alpha);
 	}
 }
 void shape::draw_robotRep(double rayon, double xc, double yc){
-	graphic_draw_circle(rayon,xc,yc,BLACK,FILLED,GREEN,false);
+	graphic_draw_circle(rayon,xc,yc,BLACK,FILLED,GREEN);
 }
 void shape::draw_robotSpa(double rayon, double xc, double yc){
-	graphic_draw_circle(rayon,xc,yc,LIGHT_BLUE,UNFILLED,WHITE,false);
+	graphic_draw_circle(rayon,xc,yc,LIGHT_BLUE,UNFILLED,WHITE);
 }
 void shape::draw_parti(double cote, double xc, double yc){
 	graphic_draw_square(cote,xc,yc,RED,FILLED,GREY);

@@ -18,28 +18,39 @@ bool fill,RGB colorb)
 		(*ptcr)->set_source_rgb(colorb.r,colorb.g,colorb.b);
 		(*ptcr)->fill_preserve();
 	}
-	(*ptcr)->set_line_width(5.0);
+	(*ptcr)->set_line_width(1.5);
 	(*ptcr)->set_source_rgb(color.r,color.g,color.b);
 	(*ptcr)->stroke();
 }
 
-void graphic_draw_circle(double rayon, double xc, double yc, RGB color, 
-bool fill,RGB colorb,bool robotNeut)
+void graphic_draw_circleNeut(double rayon, double xc, double yc, RGB color, 
+bool fill,RGB colorb, double alpha)
 {
 	(*ptcr)->arc(xc,yc,rayon,0.0, 2*M_PI);
 	if (fill==true){
 		(*ptcr)->set_source_rgb(colorb.r,colorb.g,colorb.b);
 		(*ptcr)->fill_preserve();
 	}
-	(*ptcr)->set_line_width(5.0);
+	(*ptcr)->set_line_width(1.0);
 	(*ptcr)->set_source_rgb(color.r,color.g,color.b);
 	(*ptcr)->stroke();
-	if (robotNeut==true){
-		(*ptcr)->set_line_width(10.0);
-		(*ptcr)->set_source_rgb(GREEN.r,GREEN.g,GREEN.b);
-		(*ptcr)->move_to(xc,yc);
-		(*ptcr)->line_to(xc+rayon,yc);
-		(*ptcr)->stroke();
+	(*ptcr)->set_line_width(1.0);
+	(*ptcr)->set_source_rgb(GREEN.r,GREEN.g,GREEN.b);
+	(*ptcr)->move_to(xc,yc);
+	(*ptcr)->line_to(xc+rayon*cos(alpha),yc+rayon*sin(alpha));
+	(*ptcr)->stroke();
+}
+
+void graphic_draw_circle(double rayon, double xc, double yc, RGB color, 
+bool fill,RGB colorb)
+{
+	(*ptcr)->arc(xc,yc,rayon,0.0, 2*M_PI);
+	if (fill==true){
+		(*ptcr)->set_source_rgb(colorb.r,colorb.g,colorb.b);
+		(*ptcr)->fill_preserve();
 	}
+	(*ptcr)->set_line_width(1.0);
+	(*ptcr)->set_source_rgb(color.r,color.g,color.b);
+	(*ptcr)->stroke();
 }
 
