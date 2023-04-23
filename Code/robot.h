@@ -71,18 +71,18 @@ public:
 	donnees_spatial get_donnees();
 };
 
-void lecture_robot_reparateur(vector<Particule>& particules , string line
+bool lecture_robot_reparateur(vector<Particule>& particules , string line
 	, vector<Reparateur>& reparateurs, vector<Neutraliseur>& neutraliseurs);
 	
-void lecture_robot_neutraliseur(Spatial& spatial, vector<Particule>& particules 
+bool lecture_robot_neutraliseur(Spatial& spatial, vector<Particule>& particules 
 						, string line , vector<Reparateur>& reparateurs
 						, vector<Neutraliseur>& neutraliseurs);
 						
-void verification_robots(vector<Particule>& particules, Cercle c, bool type
+bool verification_robots(vector<Particule>& particules, Cercle c, bool type
 		, vector<Reparateur>& reparateurs, vector<Neutraliseur>& neutraliseurs);
 		//le type de robot représente neutraliseur : 1 et réparateur : 0
 
-void verification_spatial(Spatial &spatial, vector<Particule> &particules);
+bool verification_spatial(Spatial &spatial, vector<Particule> &particules);
 void draw_Robot(vector<Neutraliseur>& robot,int nb);
 void draw_Robot(vector<Reparateur>& robot, int nb);
 void draw_Robot(Spatial& robot);

@@ -30,6 +30,11 @@ void simulation::lecture(char* nom_fichier)
 	int nbP;
 	string line;
 	
+	Spatial spatial_vide(0, 0, 0,0, 0, 0, 0, 0, 0,0, 0);
+	Simulation sim_vide({}, spatial_vide, {}, {},"");
+	sim = sim_vide;
+	p_sim = &sim;
+	
 	ifstream fichier(nom_fichier);
 	if(!fichier.fail())
 	{
@@ -40,7 +45,7 @@ void simulation::lecture(char* nom_fichier)
 		for(int i(0); i < nbP; i++)	//lecture données particules
 		{
 			do{getline(fichier >> ws,line);} while(line[0]=='#');
-			particules.push_back(lecture_particule(particules, line));
+			if(lecture_particule(particules, line))return;
 		}
 		
 		do{getline(fichier >> ws,line);} while(line[0]=='#'); //lecture robot spatial
@@ -50,19 +55,20 @@ void simulation::lecture(char* nom_fichier)
 		data >> nbNd; data >> nbRr; data >> nbRs;
 		Spatial spatial(x,y ,nbUpdate, nbNr, nbNs, nbNd, nbRr, nbRs,
 						r_spatial ,nbNr+nbNs+nbNd, nbRr + nbRs);
-		verification_spatial(spatial, particules);
+		if(verification_spatial(spatial, particules)) return;
 		
 		for(int i(0); i < nbP; i++)	//lecture données robots reparateurs
 		{
 			do{getline(fichier >> ws,line);} while(line[0]=='#');
-			lecture_robot_reparateur(particules,line,reparateurs,neutraliseurs);
+			if(lecture_robot_reparateur(particules
+				,line,reparateurs,neutraliseurs)) return;
 		}
 		
 		for(int i(0); i < nbP; i++)	//lecture données robots neutraliseurs
 		{
 			do{getline(fichier >> ws,line);} while(line[0]=='#');
-			lecture_robot_neutraliseur(spatial, particules, line 
-										,reparateurs, neutraliseurs);
+			if(lecture_robot_neutraliseur(spatial, particules, line 
+				,reparateurs, neutraliseurs)) return;
 		}
 		
 		Simulation sim_copy(particules, spatial, reparateurs, neutraliseurs,

@@ -295,9 +295,10 @@ void Fenetre::on_file_dialog_response(int response_id,
 			std::cout << "Open clicked." << std::endl;
 
 			//Notice that this is a std::string, not a Glib::ustring.
-			auto filename = dialog->get_file()->get_basename();
+			auto filename = dialog->get_file()->get_path();
 			std::cout << "File selected: " << filename << std::endl;
 			simulation::lecture(&(filename[0]));
+			m_area.draw();
 			break;
 		}
 		case Gtk::ResponseType::CANCEL:

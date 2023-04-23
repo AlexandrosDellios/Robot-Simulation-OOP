@@ -12,7 +12,7 @@
 #include "shape.h"
 #include "constante.h"
 
-void lecture_robot_reparateur(vector<Particule>& particules , string line
+bool lecture_robot_reparateur(vector<Particule>& particules , string line
 	, vector<Reparateur>& reparateurs, vector<Neutraliseur>& neutraliseurs)
 {
 	double x,y;
@@ -20,11 +20,13 @@ void lecture_robot_reparateur(vector<Particule>& particules , string line
 	data >> x; data >> y;
 	Reparateur robot(x,y,r_reparateur);
 	Cercle cercle = robot.get_cercle();
-	verification_robots(particules, cercle,0, reparateurs, neutraliseurs);
+	if(verification_robots(particules, cercle,0, reparateurs, neutraliseurs))
+	{return 1;}
 	reparateurs.push_back(robot);
+	return 0;
 }
 
-void lecture_robot_neutraliseur(Spatial& spatial, vector<Particule>& particules 
+bool lecture_robot_neutraliseur(Spatial& spatial, vector<Particule>& particules 
 							, string line , vector<Reparateur>& reparateurs
 							, vector<Neutraliseur>& neutraliseurs)
 {
@@ -36,24 +38,26 @@ void lecture_robot_neutraliseur(Spatial& spatial, vector<Particule>& particules
 	data >> boolalpha >> panne; data>> k_update_panne;
 	Neutraliseur robot(x,y,r_neutraliseur,a,c_n,panne, k_update_panne);
 	Cercle cercle = robot.get_cercle();
-	verification_robots(particules, cercle,1, reparateurs, neutraliseurs);
+	if(verification_robots(particules, cercle,1, reparateurs, neutraliseurs))
+	{return 1;}
 	if(k_update_panne > spatial.getupdatemax())
 	{
 		cout << message ::invalid_k_update(x, y, k_update_panne
 											, spatial.getupdatemax());
-		exit(EXIT_FAILURE);
+		return 1;
 	}
 	neutraliseurs.push_back(robot);
+	return 0;
 }
 
-void verification_spatial(Spatial &spatial, vector<Particule> &particules)
+bool verification_spatial(Spatial &spatial, vector<Particule> &particules)
 {
 	Cercle c = spatial.get_cercle();
 	if((c.C.x+(c.r/2)>dmax) or (c.C.y+(c.r/2)>dmax) or (c.C.x-(c.r/2)<-dmax) 
 		or (c.C.y-(c.r/2)<-dmax))
 	{
 		cout << message::spatial_robot_ouside(c.C.x, c.C.y);
-		exit(EXIT_FAILURE);
+		return 1;
 	}
 	for (size_t i(0); i<particules.size(); ++i)
 	{
@@ -62,12 +66,13 @@ void verification_spatial(Spatial &spatial, vector<Particule> &particules)
 		{
 			cout << message::particle_robot_superposition(c2.C.x, c2.C.y,c2.d
 															, c.C.x, c.C.y,c.r);
-			exit(EXIT_FAILURE);
+			return 1;
 		}	
 	}
+	return 0;
 }
 
-void verification_robots(vector<Particule>& particules, Cercle c, bool type
+bool verification_robots(vector<Particule>& particules, Cercle c, bool type
 		, vector<Reparateur>& reparateurs, vector<Neutraliseur>& neutraliseurs)
 {
 	for (size_t i(0); i<neutraliseurs.size(); ++i)
@@ -79,7 +84,7 @@ void verification_robots(vector<Particule>& particules, Cercle c, bool type
 															, c2.C.x, c2.C.y);
 			else cout << message::repairer_neutralizer_superposition(c.C.x
 													, c.C.y, c2.C.x, c2.C.y);
-			exit(EXIT_FAILURE);
+			return 1;
 		}	
 	}
 	for (size_t i(0); i<reparateurs.size(); ++i)
@@ -91,7 +96,7 @@ void verification_robots(vector<Particule>& particules, Cercle c, bool type
 													, c2.C.y, c.C.x, c.C.y);
 			else cout << message::repairers_superposition(c.C.x, c.C.y, c2.C.x
 																	, c2.C.y);
-			exit(EXIT_FAILURE);
+			return 1;
 		}	
 	}
 	for (size_t i(0); i<particules.size(); ++i)
@@ -101,9 +106,10 @@ void verification_robots(vector<Particule>& particules, Cercle c, bool type
 		{
 			cout << message::particle_robot_superposition(c2.C.x, c2.C.y,c2.d
 															, c.C.x, c.C.y,c.r);
-			exit(EXIT_FAILURE);
+			return 1;;
 		}	
 	}
+	return 0;
 }
 
 //"getters"
