@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <vector>
 #include <iostream>
+#include <random>
 
 #include "simulation.h"
 #include "robot.h"
@@ -18,20 +19,23 @@
 #include "message.h"
 
 using namespace std;
-Spatial sp(0, 0, 0,0, 0, 0, 0, 0, 0,0, 0);
-Simulation sim({}, sp, {}, {},"");
-Simulation* p_sim(&sim);
+Spatial sp(0,0,0,0,0,0,0,0,0,0);
+static default_random_engine e;
+Simulation sim({}, sp, {}, {},"",e);
+static Simulation* p_sim(&sim);
+
 void simulation::lecture(char* nom_fichier)
 {
 	vector<Particule> particules;
 	vector<Reparateur> reparateurs;
 	vector<Neutraliseur> neutraliseurs;
-	int x,y,nbUpdate, nbNr, nbNs, nbNd, nbRr, nbRs; //variables tmp spatial
+	int x,y,nbUpdate, nbNr, nbNs, nbNd, nbNp(0), nbRr, nbRs; //variables tmp spatial
 	int nbP;
 	string line;
 	
-	Spatial spatial_vide(0, 0, 0,0, 0, 0, 0, 0, 0,0, 0);
-	Simulation sim_vide({}, spatial_vide, {}, {},"");
+	default_random_engine e;
+	Spatial spatial_vide(0,0,0,0,0,0,0,0,0,0);
+	Simulation sim_vide({}, spatial_vide, {}, {},"",e);
 	sim = sim_vide;
 	p_sim = &sim;
 	
@@ -53,8 +57,11 @@ void simulation::lecture(char* nom_fichier)
 		
 		data >> x; data >> y; data >> nbUpdate; data >> nbNr; data >> nbNs;
 		data >> nbNd; data >> nbRr; data >> nbRs;
-		Spatial spatial(x,y ,nbUpdate, nbNr, nbNs, nbNd, nbRr, nbRs,
-						r_spatial ,nbNr+nbNs+nbNd, nbRr + nbRs);
+		for(size_t i=0; i < neutraliseurs.size(); i++)
+		{
+			if(neutraliseurs[i].get_panne()) nbNp++;
+		}
+		Spatial spatial(x,y,r_spatial ,nbUpdate, nbNr, nbNs, nbNd, nbRr, nbRs, nbNp);
 		if(verification_spatial(spatial, particules)) return;
 		
 		for(int i(0); i < nbP; i++)	//lecture données robots reparateurs
@@ -71,17 +78,18 @@ void simulation::lecture(char* nom_fichier)
 				,reparateurs, neutraliseurs)) return;
 		}
 		
+		e.seed(1);
 		Simulation sim_copy(particules, spatial, reparateurs, neutraliseurs,
-						nom_fichier);
+						nom_fichier,e);
 		sim = sim_copy;
 		p_sim = &sim;
 		cout << message::success();
+		
 	}
 	else
 	{
 		cerr << "erreur dans l'ouverture du fichier" << endl;
 	}
-	
 }
 
 void simulation::sauvegarde()
@@ -90,7 +98,7 @@ void simulation::sauvegarde()
 	vector<Particule> p = p_sim->get_particules();
 	vector<Reparateur> r = p_sim->get_reparateurs();
 	vector<Neutraliseur> n = p_sim->get_neutraliseurs();
-	donnees_spatial d = p_sim->get_spatial().get_donnees();
+	Data d = p_sim->get_spatial().get_donnees();
 	if (file.is_open())
 	{
 		file << "# " << p_sim->get_filename() 
@@ -129,13 +137,15 @@ void simulation::sauvegarde()
 	else cerr << "erreur dans l'ouverture du fichier" << std::endl;
 }
 
-void simulation::mise_a_jour();
-
-Data simulation::get_data()
+void simulation::mise_a_jour()
 {
-	Data data = {3,3,1,3,0,2,1};
-	
-	return data;
+	boom();
+}
+
+Data simulation::update_data(int nbupdates, int& p)
+{
+	p = p_sim->get_particules().size();
+	return p_sim->get_spatial().get_donnees();
 }
 default_random_engine Simulation::get_e(){return e;};
 
@@ -147,25 +157,26 @@ void simulation::draw_all_Robots(){
 }
 
 void simulation::boom(){
-	vector<Particule> new_parti;
-	vector<Particule> temp_parti;
+	vector<Particule> updated_particules;
+	vector<Particule> temp;
+	vector<Particule> copy_particules = p_sim->get_particules();
 	double p = desintegration_rate;
-	for (size_t i(0); i < p_sim->get_particules().size(); ++i){
-		bernoulli_distribution b(p/p_sim->get_particules().size());
-		default_random_engine e = p_sim->get_e();
-		if (p_sim->get_particules()[i].get_carre().d > d_particule_min + shape::epsil_zero){
-			if (b(e)){
-				p_sim->get_particules().erase(p_sim->get_particules().begin()+i);
-				temp_parti = desintegration(p_sim->get_particules()[i]);
-				for (auto i: temp_parti){
-					new_parti.push_back(i);
-				}
+	for (size_t i(0); i < copy_particules.size(); ++i)
+	{
+		bernoulli_distribution b(p/copy_particules.size());
+		if((copy_particules[i].get_carre().d 
+			> d_particule_min + shape::epsil_zero) && b(e))
+		{
+			temp = desintegration(copy_particules[i]);
+			for (auto i: temp)
+			{
+				updated_particules.push_back(i);
 			}
 		}
+		else updated_particules.push_back(copy_particules[i]);
+		cout << e <<endl;
 	}
-	for (auto i: new_parti){
-		p_sim->get_particules().push_back(i);
-	}
+	p_sim->set_particules(updated_particules);
 }
 
-
+void Simulation::set_particules(vector<Particule> p){particules = p;};

@@ -168,7 +168,7 @@ robots neutraliseurs en réserve:"),
 	
 	timer_added(false),// to handle a single timer
 	disconnect(false), // to handle a single timer
-	timeout_value(500) // 500 ms = 0.5 seconds
+	timeout_value(10) // 500 ms = 0.5 seconds
 {
 	set_title("Propre en Ordre");
 	set_resizable(true);
@@ -380,10 +380,11 @@ bool Fenetre::on_timeout()
 		return false; // End of Timer 
 	}
 	
-	//simulation::mise_a_jour();
-	Data data = simulation::get_data();
+	simulation::mise_a_jour();
+	int p = 0;
+	Data data = simulation::update_data(maj,p);
 	data_maj.set_text(std::to_string(maj));
-	data_particules.set_text(std::to_string(data.p));
+	data_particules.set_text(std::to_string(p));
 	data_nbRs.set_text(std::to_string(data.nbRs));
 	data_nbRr.set_text(std::to_string(data.nbRr));
 	data_nbNs.set_text(std::to_string(data.nbNs));

@@ -10,7 +10,7 @@ void graphic_set_context(const Cairo::RefPtr<Cairo::Context>& cr)
 }
 
 void graphic_draw_square(double cote, double xc, double yc, RGB color, 
-bool fill,RGB colorb) 
+							bool fill,RGB colorb) 
 {
 
 	(*ptcr)->rectangle(xc-(cote/2),yc-(cote/2),cote,cote);
@@ -18,13 +18,13 @@ bool fill,RGB colorb)
 		(*ptcr)->set_source_rgb(colorb.r,colorb.g,colorb.b);
 		(*ptcr)->fill_preserve();
 	}
-	(*ptcr)->set_line_width(1.5);
+	(*ptcr)->set_line_width(0.3);
 	(*ptcr)->set_source_rgb(color.r,color.g,color.b);
 	(*ptcr)->stroke();
 }
 
 void graphic_draw_circleNeut(double rayon, double xc, double yc, RGB color, 
-bool fill,RGB colorb, double alpha)
+								bool fill,RGB colorb, double alpha)
 {
 	(*ptcr)->arc(xc,yc,rayon,0.0, 2*M_PI);
 	if (fill==true){
@@ -42,7 +42,7 @@ bool fill,RGB colorb, double alpha)
 }
 
 void graphic_draw_circle(double rayon, double xc, double yc, RGB color, 
-bool fill,RGB colorb)
+							bool fill,RGB colorb)
 {
 	(*ptcr)->arc(xc,yc,rayon,0.0, 2*M_PI);
 	if (fill==true){

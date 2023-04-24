@@ -40,10 +40,10 @@ bool lecture_robot_neutraliseur(Spatial& spatial, vector<Particule>& particules
 	Cercle cercle = robot.get_cercle();
 	if(verification_robots(particules, cercle,1, reparateurs, neutraliseurs))
 	{return 1;}
-	if(k_update_panne > spatial.getupdatemax())
+	if(k_update_panne > spatial.get_donnees().nbUpdate)
 	{
 		cout << message ::invalid_k_update(x, y, k_update_panne
-											, spatial.getupdatemax());
+											, spatial.get_donnees().nbUpdate);
 		return 1;
 	}
 	neutraliseurs.push_back(robot);
@@ -114,8 +114,8 @@ bool verification_robots(vector<Particule>& particules, Cercle c, bool type
 
 //"getters"
 Cercle Robot::get_cercle(){return cercle;};
-int Spatial::getupdatemax(){return donnees.nbUpdate;};
-donnees_spatial Spatial::get_donnees(){return donnees;};
+void Spatial::set_updates(int u){donnees.nbUpdate = u;};
+Data Spatial::get_donnees(){return donnees;};
 double Neutraliseur::get_alpha(){return alpha;};
 int Neutraliseur::get_c_n(){return c_n;};
 bool Neutraliseur::get_panne(){return panne;};

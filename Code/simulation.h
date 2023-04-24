@@ -24,8 +24,9 @@ private :
 	
 public :
 	Simulation(vector<Particule> p, Spatial s, vector<Reparateur> r
-									, vector<Neutraliseur> n, string f) :
-		particules(p), spatial(s), reparateurs(r),neutraliseurs(n),filename(f){}
+				, vector<Neutraliseur> n, string f, default_random_engine e) :
+		particules(p), spatial(s), reparateurs(r),neutraliseurs(n),filename(f)
+		,e(e){}
 	
 	vector<Particule>& get_particules(){return particules;};
 	Spatial& get_spatial(){return spatial;};
@@ -33,11 +34,7 @@ public :
 	vector<Neutraliseur>& get_neutraliseurs(){return neutraliseurs;};
 	string get_filename(){return filename;};
 	default_random_engine get_e();
-};
-
-struct Data
-{
-	unsigned int p, nbRs, nbRr, nbNs, nbNp, nbNd, nbNr;
+	void set_particules(vector<Particule> p);
 };
 
 namespace simulation
@@ -45,7 +42,7 @@ namespace simulation
 	void lecture(char* nom_fichier);
 	void sauvegarde();
 	void mise_a_jour();
-	Data get_data();
+	Data update_data(int nbupdates, int& p);
 	void draw_all_Robots();
 	void boom();
 }

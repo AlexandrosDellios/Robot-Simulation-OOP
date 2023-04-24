@@ -14,13 +14,11 @@
 
 using namespace std;
 
-struct donnees_spatial
+struct Data
 {
 	int nbUpdate;
-	int nbNr , nbNs, nbNd;
+	int nbNr , nbNs, nbNd, nbNp;
 	int nbRr , nbRs;
-	int nbN;
-	int nbR;
 };
 
 class Robot
@@ -60,15 +58,16 @@ public:
 class Spatial : public Robot
 {
 private:
-	donnees_spatial donnees;
+	Data donnees;
 	
 public:
-	Spatial(double x, double y, int nbU ,int Nr, int Ns, int Nd, int Rr, 
-			int Rs, double r_spatial,int N, int R) : 
-		Robot(x,y,r_spatial), donnees({nbU,Nr,Ns,Nd,Rr,Rs,N,R}){}
+	Spatial(double x, double y, double rayon, int nbU ,int Nr, int Ns, int Nd,
+	 int Np, int Rr, int Rs) : 
+		Robot(x,y,rayon), donnees({nbU,Nr,Ns,Nd,Np,Rr,Rs}){}
 	
-	int getupdatemax();
-	donnees_spatial get_donnees();
+	void set_updates(int u);
+	Data get_donnees();
+	Data set_donnees();
 };
 
 bool lecture_robot_reparateur(vector<Particule>& particules , string line
