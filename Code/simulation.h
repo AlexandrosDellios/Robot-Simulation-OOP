@@ -42,7 +42,7 @@ namespace simulation
 	void lecture(char* nom_fichier);
 	void sauvegarde();
 	void mise_a_jour();
-	Data update_data(int nbupdates, int& p);
+	Data update_data(int& p);
 	void draw_all_Robots();
 	void boom();
 }

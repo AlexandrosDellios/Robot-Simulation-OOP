@@ -114,7 +114,7 @@ bool verification_robots(vector<Particule>& particules, Cercle c, bool type
 
 //"getters"
 Cercle Robot::get_cercle(){return cercle;};
-void Spatial::set_updates(int u){donnees.nbUpdate = u;};
+void Spatial::add_update(){donnees.nbUpdate++;};
 Data Spatial::get_donnees(){return donnees;};
 double Neutraliseur::get_alpha(){return alpha;};
 int Neutraliseur::get_c_n(){return c_n;};

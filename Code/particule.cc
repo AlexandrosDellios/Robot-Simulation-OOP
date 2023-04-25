@@ -65,14 +65,17 @@ void draw_particule(vector<Particule>& particule,int nbP){
 vector<Particule> desintegration(Particule particule){
 	vector<Particule> temp;
 	Carre c = particule.get_carre();
-	Particule c1 (c.C.x-((c.d)/4), c.C.y+((c.d)/4), ((c.d)/2)-2*shape::epsil_zero);
-	Particule c2 (c.C.x+((c.d)/4), c.C.y+((c.d)/4), ((c.d)/2)-2*shape::epsil_zero);
-	Particule c3 (c.C.x-((c.d)/4), c.C.y-((c.d)/4), ((c.d)/2)-2*shape::epsil_zero);
-	Particule c4 (c.C.x+((c.d)/4), c.C.y-((c.d)/4), ((c.d)/2)-2*shape::epsil_zero);
-	temp.push_back(c1);
-	temp.push_back(c2);
-	temp.push_back(c3);
-	temp.push_back(c4);
+	if(((c.d)/2)-2*shape::epsil_zero > d_particule_min + shape::epsil_zero)
+	{
+		Particule c1 (c.C.x-((c.d)/4), c.C.y+((c.d)/4), ((c.d)/2)-2*shape::epsil_zero);
+		Particule c2 (c.C.x+((c.d)/4), c.C.y+((c.d)/4), ((c.d)/2)-2*shape::epsil_zero);
+		Particule c3 (c.C.x-((c.d)/4), c.C.y-((c.d)/4), ((c.d)/2)-2*shape::epsil_zero);
+		Particule c4 (c.C.x+((c.d)/4), c.C.y-((c.d)/4), ((c.d)/2)-2*shape::epsil_zero);
+		temp.push_back(c1);
+		temp.push_back(c2);
+		temp.push_back(c3);
+		temp.push_back(c4);
+	}
 	return temp;
 }
 

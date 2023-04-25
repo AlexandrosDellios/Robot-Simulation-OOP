@@ -96,7 +96,6 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
 	{
 		// adjust the frame (cadrage) to prevent distortion 
 		adjustFrame(width, height);
-		draw_frame(cr, frame);
 		orthographic_projection(cr, frame); // set the transformation MODELE to GTKmm
 	
 		//set width and color
@@ -117,15 +116,6 @@ void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
 	{
 		std::cout << "Empty !" << std::endl;
 	}
-}
-static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame)
-{
-	//display a rectangular frame around the drawing area
-	cr->set_line_width(10.0);
-	// draw greenish lines
-	cr->set_source_rgb(0., 0.7, 0.2);
-	cr->rectangle(0,0, frame.width, frame.height);
-	cr->stroke();
 }
 static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr, 
 								    Frame frame)
@@ -193,6 +183,9 @@ robots neutraliseurs en réserve:"),
     controller->signal_key_pressed().connect(
                   sigc::mem_fun(*this, &Fenetre::on_window_key_pressed), false);
     add_controller(controller);
+    
+    //intialisation des données
+    update_infos();
 }
 
 void Fenetre::create_boxes()
@@ -299,6 +292,7 @@ void Fenetre::on_file_dialog_response(int response_id,
 			std::cout << "File selected: " << filename << std::endl;
 			simulation::lecture(&(filename[0]));
 			m_area.draw();
+			update_infos();
 			break;
 		}
 		case Gtk::ResponseType::CANCEL:
@@ -312,7 +306,7 @@ void Fenetre::on_file_dialog_response(int response_id,
 			break;
 		}
 	}
-	delete dialog;
+	dialog->hide();
 } 
 
 
@@ -371,7 +365,6 @@ void Fenetre::on_button_delete_timer()
 
 bool Fenetre::on_timeout()
 {
-	static unsigned int maj(1);
 	
 	if(disconnect)
 	{
@@ -381,9 +374,15 @@ bool Fenetre::on_timeout()
 	}
 	
 	simulation::mise_a_jour();
+	update_infos();
+	m_area.draw();
+}
+
+void Fenetre::update_infos()
+{
 	int p = 0;
-	Data data = simulation::update_data(maj,p);
-	data_maj.set_text(std::to_string(maj));
+	Data data = simulation::update_data(p);
+	data_maj.set_text(std::to_string(data.nbUpdate));
 	data_particules.set_text(std::to_string(p));
 	data_nbRs.set_text(std::to_string(data.nbRs));
 	data_nbRr.set_text(std::to_string(data.nbRr));
@@ -392,5 +391,4 @@ bool Fenetre::on_timeout()
 	data_nbNd.set_text(std::to_string(data.nbNd));
 	data_nbNr.set_text(std::to_string(data.nbNr));
 	
-	++maj;
 }

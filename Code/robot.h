@@ -65,7 +65,7 @@ public:
 	 int Np, int Rr, int Rs) : 
 		Robot(x,y,rayon), donnees({nbU,Nr,Ns,Nd,Np,Rr,Rs}){}
 	
-	void set_updates(int u);
+	void add_update();
 	Data get_donnees();
 	Data set_donnees();
 };

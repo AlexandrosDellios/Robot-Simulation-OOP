@@ -33,7 +33,6 @@ void simulation::lecture(char* nom_fichier)
 	int nbP;
 	string line;
 	
-	default_random_engine e;
 	Spatial spatial_vide(0,0,0,0,0,0,0,0,0,0);
 	Simulation sim_vide({}, spatial_vide, {}, {},"",e);
 	sim = sim_vide;
@@ -61,14 +60,14 @@ void simulation::lecture(char* nom_fichier)
 		{
 			if(neutraliseurs[i].get_panne()) nbNp++;
 		}
-		Spatial spatial(x,y,r_spatial ,nbUpdate, nbNr, nbNs, nbNd, nbRr, nbRs, nbNp);
+		Spatial spatial(x,y,r_spatial ,nbUpdate, nbNr, nbNs, nbNd, nbNp, nbRr, nbRs);
 		if(verification_spatial(spatial, particules)) return;
 		
 		for(int i(0); i < nbP; i++)	//lecture données robots reparateurs
 		{
 			do{getline(fichier >> ws,line);} while(line[0]=='#');
-			if(lecture_robot_reparateur(particules
-				,line,reparateurs,neutraliseurs)) return;
+			if(lecture_robot_reparateur(particules,line,reparateurs
+				,neutraliseurs)) return;
 		}
 		
 		for(int i(0); i < nbP; i++)	//lecture données robots neutraliseurs
@@ -140,9 +139,10 @@ void simulation::sauvegarde()
 void simulation::mise_a_jour()
 {
 	boom();
+	p_sim->get_spatial().add_update();
 }
 
-Data simulation::update_data(int nbupdates, int& p)
+Data simulation::update_data(int& p)
 {
 	p = p_sim->get_particules().size();
 	return p_sim->get_spatial().get_donnees();
@@ -161,11 +161,11 @@ void simulation::boom(){
 	vector<Particule> temp;
 	vector<Particule> copy_particules = p_sim->get_particules();
 	double p = desintegration_rate;
+	//default_random_engine e = p_sim->get_e();
 	for (size_t i(0); i < copy_particules.size(); ++i)
 	{
 		bernoulli_distribution b(p/copy_particules.size());
-		if((copy_particules[i].get_carre().d 
-			> d_particule_min + shape::epsil_zero) && b(e))
+		if(b(e))
 		{
 			temp = desintegration(copy_particules[i]);
 			for (auto i: temp)
@@ -174,7 +174,6 @@ void simulation::boom(){
 			}
 		}
 		else updated_particules.push_back(copy_particules[i]);
-		cout << e <<endl;
 	}
 	p_sim->set_particules(updated_particules);
 }

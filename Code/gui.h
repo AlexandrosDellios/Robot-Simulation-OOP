@@ -86,6 +86,7 @@ protected:
 	
 	const int timeout_value;
 	MyArea m_area;
+	void update_infos();
 	
 };
 #endif
