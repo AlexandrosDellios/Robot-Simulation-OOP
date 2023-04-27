@@ -11,6 +11,7 @@
 #include "message.h"
 #include "shape.h"
 #include "constante.h"
+using namespace std;
 
 bool lecture_robot_reparateur(vector<Particule>& particules , string line
 	, vector<Reparateur>& reparateurs, vector<Neutraliseur>& neutraliseurs)
@@ -62,7 +63,7 @@ bool verification_spatial(Spatial &spatial, vector<Particule> &particules)
 	for (size_t i(0); i<particules.size(); ++i)
 	{
 		Carre c2 = particules[i].get_carre();
-		if (shape::colli_carre_cercle(c2,c,true))
+		if (colli_carre_cercle(c2,c,true))
 		{
 			cout << message::particle_robot_superposition(c2.C.x, c2.C.y,c2.d
 															, c.C.x, c.C.y,c.r);
@@ -78,7 +79,7 @@ bool verification_robots(vector<Particule>& particules, Cercle c, bool type
 	for (size_t i(0); i<neutraliseurs.size(); ++i)
 	{
 		Cercle c2 = neutraliseurs[i].get_cercle();
-		if (shape::colli_cercle(c,c2,true))
+		if (colli_cercle(c,c2,true))
 		{
 			if(type) cout << message::neutralizers_superposition(c.C.x, c.C.y
 															, c2.C.x, c2.C.y);
@@ -90,7 +91,7 @@ bool verification_robots(vector<Particule>& particules, Cercle c, bool type
 	for (size_t i(0); i<reparateurs.size(); ++i)
 	{
 		Cercle c2 = reparateurs[i].get_cercle();
-		if (shape::colli_cercle(c,c2,true))
+		if (colli_cercle(c,c2,true))
 		{
 			if(type) cout << message::repairer_neutralizer_superposition(c2.C.x
 													, c2.C.y, c.C.x, c.C.y);
@@ -102,7 +103,7 @@ bool verification_robots(vector<Particule>& particules, Cercle c, bool type
 	for (size_t i(0); i<particules.size(); ++i)
 	{
 		Carre c2 = particules[i].get_carre();
-		if (shape::colli_carre_cercle(c2,c,true))
+		if (colli_carre_cercle(c2,c,true))
 		{
 			cout << message::particle_robot_superposition(c2.C.x, c2.C.y,c2.d
 															, c.C.x, c.C.y,c.r);

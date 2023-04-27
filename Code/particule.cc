@@ -38,7 +38,7 @@ bool verification_particule(vector<Particule>& particules, Particule p)
 	for (size_t i(0); i<particules.size(); ++i)
 	{
 		Carre c2 = particules[i].get_carre();
-		if (shape::colli_carre(c,c2,true))
+		if (colli_carre(c,c2,true))
 		{
 			cout << message::particle_superposition(c.C.x,c.C.y,c2.C.x,c2.C.y);
 			return 1;

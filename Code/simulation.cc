@@ -21,7 +21,7 @@
 using namespace std;
 Spatial sp(0,0,0,0,0,0,0,0,0,0);
 static default_random_engine e;
-Simulation sim({}, sp, {}, {},"",e);
+static Simulation sim({}, sp, {}, {},"",e);
 static Simulation* p_sim(&sim);
 
 void simulation::lecture(char* nom_fichier)
@@ -91,16 +91,16 @@ void simulation::lecture(char* nom_fichier)
 	}
 }
 
-void simulation::sauvegarde()
+void simulation::sauvegarde(string filename)
 {
-	ofstream file(p_sim->get_filename());
+	ofstream file(filename);
 	vector<Particule> p = p_sim->get_particules();
 	vector<Reparateur> r = p_sim->get_reparateurs();
 	vector<Neutraliseur> n = p_sim->get_neutraliseurs();
 	Data d = p_sim->get_spatial().get_donnees();
 	if (file.is_open())
 	{
-		file << "# " << p_sim->get_filename() 
+		file << "# " << filename 
 		<< "\n#\n# nombre de particules puis les "
 		<< "données d'une particule par ligne\n" << p.size() << "\n";
 		for(size_t i=0; i < p.size(); i++) 
@@ -161,7 +161,7 @@ void simulation::boom(){
 	vector<Particule> temp;
 	vector<Particule> copy_particules = p_sim->get_particules();
 	double p = desintegration_rate;
-	//default_random_engine e = p_sim->get_e();
+	cout << e << endl;
 	for (size_t i(0); i < copy_particules.size(); ++i)
 	{
 		bernoulli_distribution b(p/copy_particules.size());

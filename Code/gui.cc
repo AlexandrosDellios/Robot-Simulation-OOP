@@ -4,13 +4,15 @@
 #include "simulation.h"
 #include "graphic_gui.h"
 #include "constante.h"
+#define RESPONSE_SAVE 3
 
 ////////////////////////////////////////////
 
-// default Model Framing and window parameters
-static Frame default_frame = {-150., 150., -100., 100., 1.5, 300, 200}; 
+using namespace std;
 
-constexpr int area_side(200);
+// default Model Framing and window parameters
+static Frame default_frame = {-dmax, dmax, -dmax, dmax, 1, 300, 200}; 
+constexpr unsigned taille_dessin(500);
 
 static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame);
 static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr, 
@@ -18,8 +20,8 @@ static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr,
 
 MyArea::MyArea(): empty(false)
 {
-	set_content_width(area_side);
-	set_content_height(area_side);
+	set_content_width(taille_dessin);
+	set_content_height(taille_dessin);
 	
 	set_draw_func(sigc::mem_fun(*this, &MyArea::on_draw));
 }
@@ -285,8 +287,6 @@ void Fenetre::on_file_dialog_response(int response_id,
 	{
 		case Gtk::ResponseType::OK:
 		{
-			std::cout << "Open clicked." << std::endl;
-
 			//Notice that this is a std::string, not a Glib::ustring.
 			auto filename = dialog->get_file()->get_path();
 			std::cout << "File selected: " << filename << std::endl;
@@ -300,11 +300,21 @@ void Fenetre::on_file_dialog_response(int response_id,
 			std::cout << "Cancel clicked." << std::endl;
 			break;
 		}
+		case RESPONSE_SAVE:
+		{
+			std::cout << "Save clicked." << std::endl;
+			auto filename = dialog->get_file()->get_path();
+			//if (filename[-3:]!= ".txt") filename += ".txt";
+			if (!Glib::str_has_suffix(filename, ".txt")) filename += ".txt";
+			simulation::sauvegarde(filename);
+			break;
+		}
 		default:
 		{
 			std::cout << "Unexpected button clicked." << std::endl;
 			break;
 		}
+		
 	}
 	dialog->hide();
 } 
@@ -312,7 +322,30 @@ void Fenetre::on_file_dialog_response(int response_id,
 
 void Fenetre::on_button_clicked_save()
 {
-	simulation::sauvegarde();
+	auto dialog = new Gtk::FileChooserDialog("Please choose a file",
+											Gtk::FileChooser::Action::SAVE);
+	dialog->set_transient_for(*this);
+	dialog->set_modal(true);
+	dialog->signal_response().connect(sigc::bind(
+	sigc::mem_fun(*this, &Fenetre::on_file_dialog_response),dialog));
+
+	//Add response buttons to the dialog:
+	dialog->add_button("_Cancel", Gtk::ResponseType::CANCEL);
+	dialog->add_button("_Save", RESPONSE_SAVE);
+
+	//Add filters, so that only certain file types can be selected:
+	auto filter_text = Gtk::FileFilter::create();
+	filter_text->set_name("Text files");
+	filter_text->add_suffix("txt");
+	dialog->add_filter(filter_text);
+	
+	auto filter_any = Gtk::FileFilter::create();
+	filter_any->set_name("Any files");
+	filter_any->add_pattern("*");
+	dialog->add_filter(filter_any);
+	
+	//Show the dialog and wait for a user response:
+	dialog->show();
 }
 
 void Fenetre::on_button_clicked_start()

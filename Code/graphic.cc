@@ -23,34 +23,39 @@ void graphic_draw_square(double cote, double xc, double yc, RGB color,
 	(*ptcr)->stroke();
 }
 
-void graphic_draw_circleNeut(double rayon, double xc, double yc, RGB color, 
-								bool fill,RGB colorb, double alpha)
+void graphic_draw_circle(double rayon, double xc, double yc, RGB color, 
+						bool fill,RGB colorb, int type,double alpha=0)
 {
 	(*ptcr)->arc(xc,yc,rayon,0.0, 2*M_PI);
-	if (fill==true){
+	if (fill==true)
+	{
 		(*ptcr)->set_source_rgb(colorb.r,colorb.g,colorb.b);
 		(*ptcr)->fill_preserve();
 	}
-	(*ptcr)->set_line_width(1.0);
+	(*ptcr)->set_line_width(0.8);
 	(*ptcr)->set_source_rgb(color.r,color.g,color.b);
 	(*ptcr)->stroke();
-	(*ptcr)->set_line_width(1.0);
-	(*ptcr)->set_source_rgb(GREEN.r,GREEN.g,GREEN.b);
-	(*ptcr)->move_to(xc,yc);
-	(*ptcr)->line_to(xc+rayon*cos(alpha),yc+rayon*sin(alpha));
-	(*ptcr)->stroke();
+	switch (type)
+	{
+		case 1:
+			(*ptcr)->set_line_width(1.0);
+			(*ptcr)->set_source_rgb(GREEN.r,GREEN.g,GREEN.b);
+			(*ptcr)->move_to(xc,yc);
+			(*ptcr)->line_to(xc+rayon*cos(alpha),yc+rayon*sin(alpha));
+			(*ptcr)->stroke();
+		break;
+		case 2:
+			(*ptcr)->arc(xc,yc,0.5,0.0, 2*M_PI);
+			(*ptcr)->set_line_width(1);
+			(*ptcr)->set_source_rgb(color.r,color.g,color.b);
+			(*ptcr)->stroke();
+		break;
+		default:
+		break;
+	}
 }
 
-void graphic_draw_circle(double rayon, double xc, double yc, RGB color, 
-							bool fill,RGB colorb)
-{
-	(*ptcr)->arc(xc,yc,rayon,0.0, 2*M_PI);
-	if (fill==true){
-		(*ptcr)->set_source_rgb(colorb.r,colorb.g,colorb.b);
-		(*ptcr)->fill_preserve();
-	}
-	(*ptcr)->set_line_width(1.0);
-	(*ptcr)->set_source_rgb(color.r,color.g,color.b);
-	(*ptcr)->stroke();
-}
+
+
+
 

@@ -1,4 +1,4 @@
-# /home/dellios/Desktop/myfiles/Projet BA2/Code/t00.txt
+# /home/dellios/Desktop/myfiles/Projet BA2/Code/t11.txt
 #
 # nombre de particules puis les données d'une particule par ligne
 3
@@ -7,7 +7,7 @@
    -100 50 25
 
 # données du robot spatial
-5 5 123 1 3 2 1 3
+5 5 132 1 3 2 1 3
 
 # données des nbRs robots réparateurs en service (un par ligne)
    -30 60 

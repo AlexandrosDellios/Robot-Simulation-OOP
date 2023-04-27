@@ -1,4 +1,4 @@
-# /home/dellios/Desktop/myfiles/Projet BA2/Code/t00.txt
+# /home/dellios/Desktop/myfiles/Projet BA2/Code/t10.txt
 #
 # nombre de particules puis les données d'une particule par ligne
 3
