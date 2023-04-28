@@ -26,17 +26,16 @@ static Simulation* p_sim(&sim);
 
 void simulation::lecture(char* nom_fichier)
 {
-	vector<Particule> particules;
-	vector<Reparateur> reparateurs;
-	vector<Neutraliseur> neutraliseurs;
+	vector<Particule> particules{};
+	vector<Reparateur> reparateurs{};
+	vector<Neutraliseur> neutraliseurs{};
 	int x,y,nbUpdate, nbNr, nbNs, nbNd, nbNp(0), nbRr, nbRs; //variables tmp spatial
 	int nbP;
 	string line;
-	
-	Spatial spatial_vide(0,0,0,0,0,0,0,0,0,0);
-	Simulation sim_vide({}, spatial_vide, {}, {},"",e);
-	sim = sim_vide;
-	p_sim = &sim;
+	Spatial sp_vide(0,0,0,0,0,0,0,0,0,0);
+	static Simulation sim_vide({}, sp, {}, {},"",e);
+	p_sim= &sim_vide;
+
 	
 	ifstream fichier(nom_fichier);
 	if(!fichier.fail())
@@ -51,31 +50,35 @@ void simulation::lecture(char* nom_fichier)
 			if(lecture_particule(particules, line))return;
 		}
 		
+		
 		do{getline(fichier >> ws,line);} while(line[0]=='#'); //lecture robot spatial
 		data.str(line); data.clear();	//changement de string de data et reset des flags error
 		
 		data >> x; data >> y; data >> nbUpdate; data >> nbNr; data >> nbNs;
 		data >> nbNd; data >> nbRr; data >> nbRs;
-		for(size_t i=0; i < neutraliseurs.size(); i++)
-		{
-			if(neutraliseurs[i].get_panne()) nbNp++;
-		}
-		Spatial spatial(x,y,r_spatial ,nbUpdate, nbNr, nbNs, nbNd, nbNp, nbRr, nbRs);
-		if(verification_spatial(spatial, particules)) return;
 		
-		for(int i(0); i < nbP; i++)	//lecture données robots reparateurs
+		Spatial temp(x,y,r_spatial ,nbUpdate, nbNr, nbNs, nbNd, 0, nbRr, nbRs);
+		if(verification_spatial(temp, particules)) return;
+		
+		for(int i(0); i < nbRs; i++)	//lecture données robots reparateurs
 		{
 			do{getline(fichier >> ws,line);} while(line[0]=='#');
 			if(lecture_robot_reparateur(particules,line,reparateurs
 				,neutraliseurs)) return;
 		}
 		
-		for(int i(0); i < nbP; i++)	//lecture données robots neutraliseurs
+		for(int i(0); i < nbNs; i++)	//lecture données robots neutraliseurs
 		{
 			do{getline(fichier >> ws,line);} while(line[0]=='#');
-			if(lecture_robot_neutraliseur(spatial, particules, line 
+			if(lecture_robot_neutraliseur(temp, particules, line 
 				,reparateurs, neutraliseurs)) return;
 		}
+		
+		for(size_t i=0; i < neutraliseurs.size(); i++)
+		{
+			if(neutraliseurs[i].get_panne()) nbNp++;
+		}
+		Spatial spatial(x,y,r_spatial ,nbUpdate, nbNr, nbNs, nbNd, nbNp, nbRr, nbRs);
 		
 		e.seed(1);
 		Simulation sim_copy(particules, spatial, reparateurs, neutraliseurs,
@@ -100,7 +103,9 @@ void simulation::sauvegarde(string filename)
 	Data d = p_sim->get_spatial().get_donnees();
 	if (file.is_open())
 	{
-		file << "# " << filename 
+		size_t end_name = filename.find_last_of("/\\");
+		string name = filename.substr(end_name + 1);
+		file << "# " << name 
 		<< "\n#\n# nombre de particules puis les "
 		<< "données d'une particule par ligne\n" << p.size() << "\n";
 		for(size_t i=0; i < p.size(); i++) 
@@ -153,7 +158,7 @@ void simulation::draw_all_Robots(){
 	draw_Robot(p_sim->get_reparateurs(),(p_sim->get_reparateurs()).size());
 	draw_Robot(p_sim->get_neutraliseurs(),(p_sim->get_neutraliseurs()).size());
 	draw_Robot(p_sim->get_spatial());
-	draw_particule(p_sim->get_particules(), (p_sim->get_particules()).size());
+	draw_particule(p_sim->get_particules());
 }
 
 void simulation::boom(){
@@ -161,7 +166,6 @@ void simulation::boom(){
 	vector<Particule> temp;
 	vector<Particule> copy_particules = p_sim->get_particules();
 	double p = desintegration_rate;
-	cout << e << endl;
 	for (size_t i(0); i < copy_particules.size(); ++i)
 	{
 		bernoulli_distribution b(p/copy_particules.size());

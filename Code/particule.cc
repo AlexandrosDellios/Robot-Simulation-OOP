@@ -38,7 +38,7 @@ bool verification_particule(vector<Particule>& particules, Particule p)
 	for (size_t i(0); i<particules.size(); ++i)
 	{
 		Carre c2 = particules[i].get_carre();
-		if (colli_carre(c,c2,true))
+		if (shape::colli_carre(c,c2,true))
 		{
 			cout << message::particle_superposition(c.C.x,c.C.y,c2.C.x,c2.C.y);
 			return 1;
@@ -55,9 +55,9 @@ bool verification_particule(vector<Particule>& particules, Particule p)
 
 Carre Particule::get_carre(){return carre;};
 
-void draw_particule(vector<Particule>& particule,int nbP){
-	for (int i(0); i < nbP; ++i){
-		Carre c = particule[i].get_carre();
+void draw_particule(vector<Particule>& particules){
+	for (size_t i(0); i < particules.size(); ++i){
+		Carre c = particules[i].get_carre();
 		shape::draw_parti(c.d,c.C.x,c.C.y);
 	}
 }
@@ -67,10 +67,14 @@ vector<Particule> desintegration(Particule particule){
 	Carre c = particule.get_carre();
 	if(((c.d)/2)-2*shape::epsil_zero > d_particule_min + shape::epsil_zero)
 	{
-		Particule c1 (c.C.x-((c.d)/4), c.C.y+((c.d)/4), ((c.d)/2)-2*shape::epsil_zero);
-		Particule c2 (c.C.x+((c.d)/4), c.C.y+((c.d)/4), ((c.d)/2)-2*shape::epsil_zero);
-		Particule c3 (c.C.x-((c.d)/4), c.C.y-((c.d)/4), ((c.d)/2)-2*shape::epsil_zero);
-		Particule c4 (c.C.x+((c.d)/4), c.C.y-((c.d)/4), ((c.d)/2)-2*shape::epsil_zero);
+		Particule c1 (c.C.x-((c.d)/4), c.C.y+((c.d)/4)
+						, ((c.d)/2)-2*shape::epsil_zero);
+		Particule c2 (c.C.x+((c.d)/4), c.C.y+((c.d)/4)
+						, ((c.d)/2)-2*shape::epsil_zero);
+		Particule c3 (c.C.x-((c.d)/4), c.C.y-((c.d)/4)
+						, ((c.d)/2)-2*shape::epsil_zero);
+		Particule c4 (c.C.x+((c.d)/4), c.C.y-((c.d)/4)
+						, ((c.d)/2)-2*shape::epsil_zero);
 		temp.push_back(c1);
 		temp.push_back(c2);
 		temp.push_back(c3);

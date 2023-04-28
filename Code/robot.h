@@ -34,7 +34,7 @@ public :
 class Reparateur : public Robot
 {
 private:
-	S2d but;
+	S2d destination;
 public:
 	Reparateur(double x, double y, double r) : Robot(x,y,r){}
 };
@@ -47,7 +47,7 @@ private:
 	bool panne;
 	int k_update;
 public:
-	Neutraliseur(double x, double y, double r, double a, int c,bool p, int k) : 
+	Neutraliseur(double x, double y, double r, double a, int c,bool p, int k): 
 		Robot(x,y,r), alpha(a), c_n(c), panne(p),k_update(k){};
 	double get_alpha();
 	int get_c_n();

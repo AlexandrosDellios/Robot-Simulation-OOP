@@ -1,0 +1,10 @@
+# correct file with 4 particles and only the spatial robot
+#
+
+4
+	-64	-64	90
+	-64	64	90
+	64	-64	90
+	64	64	90
+
+0 0 0 0 0 0 0 0

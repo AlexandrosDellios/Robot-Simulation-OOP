@@ -1,3 +1,7 @@
+/* Projet Propre en ordre 2023
+ * Leo Sierra 341942
+ * Alexandros Dellios 355873
+*/
 #ifndef GTKMM_EXAMPLE_GRAPHIC_H
 #define GTKMM_EXAMPLE_GRAPHIC_H
 
@@ -20,4 +24,4 @@ void graphic_draw_square(double cote, double xc, double yc, RGB color,
 void graphic_draw_circle(double rayon, double xc, double yc, RGB color, 
 					bool fill,RGB colorb,int type, double alpha);
 
-#endif // GTKMM_EXAMPLE_GRAPHIC_H
+#endif

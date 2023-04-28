@@ -1,4 +1,8 @@
-# Definitions de macros
+# Projet Propre en ordre 2023
+# Leo Sierra 341942
+# Alexandros Dellios 355873
+
+### Definitions de macros
 
 #compilateur
 CXX     = g++
@@ -16,14 +20,14 @@ OFILES = simulation.o shape.o robot.o projet.o particule.o message.o gui.o \
 #Nom de l'executable
 OUT = projet
 
-# Definition de la premiere regle
+### Definition de la premiere regle
 
 all: $(OUT)
 
 projet: $(OFILES)
 	$(CXX) $(OFILES) -o projet
 
-# Definitions de cibles particulieres
+### Definitions de cibles particulieres
 
 depend:
 	@echo " *** MISE A JOUR DES DEPENDANCES ***"
@@ -38,7 +42,7 @@ clean:
 	@/bin/rm -f *.o *.x *.cc~ *.h~ projet
 	
 
-#dependances qui utilisent gtkmm
+### Dependances qui utilisent gtkmm
 projet.o: projet.cc simulation.h robot.h shape.h particule.h gui.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
 

@@ -1,6 +1,9 @@
+/* Projet Propre en ordre 2023
+ * Leo Sierra 341942
+ * Alexandros Dellios 355873
+*/
 #include <cmath>
 #include "graphic_gui.h"
-
 
 static const Cairo::RefPtr<Cairo::Context>* ptcr(nullptr); 
 
@@ -12,7 +15,7 @@ void graphic_set_context(const Cairo::RefPtr<Cairo::Context>& cr)
 void graphic_draw_square(double cote, double xc, double yc, RGB color, 
 							bool fill,RGB colorb) 
 {
-
+	if(cote <= 0.) return;
 	(*ptcr)->rectangle(xc-(cote/2),yc-(cote/2),cote,cote);
 	if (fill==true){
 		(*ptcr)->set_source_rgb(colorb.r,colorb.g,colorb.b);
@@ -26,6 +29,7 @@ void graphic_draw_square(double cote, double xc, double yc, RGB color,
 void graphic_draw_circle(double rayon, double xc, double yc, RGB color, 
 						bool fill,RGB colorb, int type,double alpha=0)
 {
+	if(rayon <= 0.) return;
 	(*ptcr)->arc(xc,yc,rayon,0.0, 2*M_PI);
 	if (fill==true)
 	{

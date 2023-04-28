@@ -1,0 +1,8 @@
+# correct file with 1 particle and only the spatial robot
+#
+
+1
+	0	0	180
+
+
+0 111 0 0 0 0 0 0 
