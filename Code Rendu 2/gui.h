@@ -64,10 +64,10 @@ protected:
 	Gtk::Button Button_Exit, Button_Open, Button_Save, Button_Start,
 		Button_Step;	
 	bool keyb_driven_state; 
-	// button signal handlers
-	void on_button_add_timer();
-	void on_button_delete_timer();
-	void on_button_quit();
+	//Timer signal handlers
+	void add_timer();
+	void delete_timer();
+	void on_quit();
 	//Timer handling
 	bool on_timeout();
 	bool timer_added; 

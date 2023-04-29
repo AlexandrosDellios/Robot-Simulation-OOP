@@ -55,14 +55,17 @@ bool verification_particule(vector<Particule>& particules, Particule p)
 
 Carre Particule::get_carre(){return carre;};
 
-void draw_particule(vector<Particule>& particules){
-	for (size_t i(0); i < particules.size(); ++i){
+void draw_particule(vector<Particule>& particules)
+{
+	for (size_t i(0); i < particules.size(); ++i)
+	{
 		Carre c = particules[i].get_carre();
 		shape::draw_parti(c.d,c.C.x,c.C.y);
 	}
 }
 
-vector<Particule> desintegration(Particule particule){
+vector<Particule> desintegration(Particule particule)
+{
 	vector<Particule> temp;
 	Carre c = particule.get_carre();
 	if(((c.d)/2)-2*shape::epsil_zero > d_particule_min + shape::epsil_zero)

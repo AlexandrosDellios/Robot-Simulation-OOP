@@ -13,7 +13,8 @@
 using namespace std;
 
 // default Model Framing and window parameters
-static Frame default_frame = {-dmax, dmax, -dmax, dmax, 1, 300, 200}; 
+static Frame default_frame = {-dmax, dmax, -dmax, dmax, 1, 2*int(dmax)
+								, 2*int(dmax)}; 
 constexpr unsigned taille_dessin(500);
 
 static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr 
@@ -43,7 +44,7 @@ robots neutraliseurs en réserve:"),
 	
 	timer_added(false),// to handle a single timer
 	disconnect(false), // to handle a single timer
-	timeout_value(10) // 500 ms = 0.5 seconds
+	timeout_value(250) // 250 ms
 {
 	set_title("Propre en Ordre");
 	set_resizable(true);
@@ -105,8 +106,7 @@ void Fenetre::create_boxes()
 	Data_Box.append(data_nbNs);
 	Data_Box.append(data_nbNp);
 	Data_Box.append(data_nbNd);
-	Data_Box.append(data_nbNr);
-	
+	Data_Box.append(data_nbNr);	
 }
 
 bool Fenetre::on_window_key_pressed(guint keyval, guint,Gdk::ModifierType state)
@@ -130,6 +130,13 @@ void Fenetre::on_button_clicked_exit()
 
 void Fenetre::on_button_clicked_open()
 {
+	if(Button_Start.get_label() == "stop")//met en pause la simulation
+	{
+		Button_Start.set_label("start");
+		Button_Step.set_sensitive(true);
+		delete_timer();
+	}
+	
     auto dialog = new Gtk::FileChooserDialog("Please choose a file",
 											Gtk::FileChooser::Action::OPEN);
 	dialog->set_transient_for(*this);
@@ -159,6 +166,13 @@ void Fenetre::on_button_clicked_open()
 
 void Fenetre::on_button_clicked_save()
 {
+	if(Button_Start.get_label() == "stop")//met en pause la simulation
+	{
+		Button_Start.set_label("start");
+		Button_Step.set_sensitive(true);
+		delete_timer();
+	}
+	
 	auto dialog = new Gtk::FileChooserDialog("Please choose a file",
 											Gtk::FileChooser::Action::SAVE);
 	dialog->set_transient_for(*this);
@@ -230,13 +244,13 @@ void Fenetre::on_button_clicked_start()
 	{
 		Button_Start.set_label("stop");
 		Button_Step.set_sensitive(false);
-		on_button_add_timer();
+		add_timer();
 	}
 	else 
 	{
 		Button_Start.set_label("start");
 		Button_Step.set_sensitive(true);
-		on_button_delete_timer();
+		delete_timer();
 	}
 }
 
@@ -245,7 +259,7 @@ void Fenetre::on_button_clicked_step()
 	on_timeout();
 }
 
-void Fenetre::on_button_add_timer()
+void Fenetre::add_timer()
 {
 	if(not timer_added)
 	{	  
@@ -263,7 +277,7 @@ void Fenetre::on_button_add_timer()
 	}
 }
 
-void Fenetre::on_button_delete_timer()
+void Fenetre::delete_timer()
 {
 	if(timer_added)
 	{

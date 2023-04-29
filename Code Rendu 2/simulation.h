@@ -20,13 +20,11 @@ private :
 	vector<Reparateur> reparateurs;
 	vector<Neutraliseur> neutraliseurs;
 	string filename;
-	default_random_engine e;
 	
 public :
 	Simulation(vector<Particule> p, Spatial s, vector<Reparateur> r
-				, vector<Neutraliseur> n, string f, default_random_engine e) :
-		particules(p), spatial(s), reparateurs(r),neutraliseurs(n),filename(f)
-		,e(e){}
+				, vector<Neutraliseur> n, string f) :
+		particules(p), spatial(s), reparateurs(r),neutraliseurs(n),filename(f){}
 	
 	vector<Particule>& get_particules(){return particules;};
 	Spatial& get_spatial(){return spatial;};

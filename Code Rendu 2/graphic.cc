@@ -39,7 +39,7 @@ void graphic_draw_circle(double rayon, double xc, double yc, RGB color,
 	(*ptcr)->set_line_width(0.8);
 	(*ptcr)->set_source_rgb(color.r,color.g,color.b);
 	(*ptcr)->stroke();
-	switch (type)
+	switch (type) //type de robot 1 : neutraliseur, 2 : spatial, 3 : reparateur
 	{
 		case 1:
 			(*ptcr)->set_line_width(1.0);
@@ -47,10 +47,9 @@ void graphic_draw_circle(double rayon, double xc, double yc, RGB color,
 			(*ptcr)->move_to(xc,yc);
 			(*ptcr)->line_to(xc+rayon*cos(alpha),yc+rayon*sin(alpha));
 			(*ptcr)->stroke();
-		break;
-		case 2:
-			(*ptcr)->arc(xc,yc,0.5,0.0, 2*M_PI);
-			(*ptcr)->set_line_width(1);
+		case 2: //appel commun au neutraliseur et spatial (dessin du centre)
+			(*ptcr)->arc(xc,yc,0.25,0.0, 2*M_PI);
+			(*ptcr)->set_line_width(0.5);
 			(*ptcr)->set_source_rgb(color.r,color.g,color.b);
 			(*ptcr)->stroke();
 		break;

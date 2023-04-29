@@ -33,8 +33,6 @@ public :
 
 class Reparateur : public Robot
 {
-private:
-	S2d destination;
 public:
 	Reparateur(double x, double y, double r) : Robot(x,y,r){}
 };

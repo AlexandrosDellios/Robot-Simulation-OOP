@@ -64,7 +64,7 @@ $(OUT): $(OFILES)
 # DO NOT DELETE THIS LINE
 simulation.o: simulation.cc simulation.h robot.h shape.h particule.h \
  constante.h message.h
-shape.o: shape.cc shape.h
+shape.o: shape.cc shape.h graphic.h
 robot.o: robot.cc robot.h shape.h particule.h message.h constante.h
 particule.o: particule.cc particule.h shape.h message.h constante.h
 message.o: message.cc message.h
