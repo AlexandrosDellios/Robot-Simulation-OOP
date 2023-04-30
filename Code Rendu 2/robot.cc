@@ -1,6 +1,8 @@
 /* Projet Propre en ordre 2023
  * Leo Sierra 341942
  * Alexandros Dellios 355873
+ * Alexandros : 85%
+ * Leo : 15%
 */
 
 #include <sstream>
