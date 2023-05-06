@@ -25,7 +25,7 @@ bool lecture_particule(vector<Particule>& particules, string line);
 
 bool verification_particule(vector<Particule>& particules, Particule p);
 void draw_particule(vector<Particule>& particules);
-vector<Particule> desintegration_particule(Particule particule);
+vector<Particule> desintegration(Particule particule);
 
 
 #endif

@@ -1,5 +1,4 @@
 /* Projet Propre en ordre 2023
- * simulation.cc
  * Leo Sierra 341942
  * Alexandros Dellios 355873
  * Leo : 80%

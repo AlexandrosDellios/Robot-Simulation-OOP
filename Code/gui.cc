@@ -297,13 +297,7 @@ bool Fenetre::on_timeout()
 		return false; // End of Timer 
 	}
 	
-	if(simulation::mise_a_jour())
-	{
-		Button_Start.set_label("start");
-		Button_Step.set_sensitive(true);
-		delete_timer();
-		return true;
-	}
+	simulation::mise_a_jour();
 	update_infos();
 	m_area.draw();
 	return true;

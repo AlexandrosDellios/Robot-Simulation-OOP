@@ -1,5 +1,4 @@
 /* Projet Propre en ordre 2023
- * robot.cc
  * Leo Sierra 341942
  * Alexandros Dellios 355873
  * Alexandros : 85%
