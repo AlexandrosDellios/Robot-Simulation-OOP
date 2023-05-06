@@ -1,6 +1,8 @@
 /* Projet Propre en ordre 2023
+ * projet.cc
  * Leo Sierra 341942
  * Alexandros Dellios 355873
+ * Leo Sierra : 100%
 */
 
 #include <iostream>

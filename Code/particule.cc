@@ -66,7 +66,7 @@ void draw_particule(vector<Particule>& particules)
 	}
 }
 
-vector<Particule> desintegration(Particule particule)
+vector<Particule> desintegration_particule(Particule particule)
 {
 	vector<Particule> temp;
 	Carre c = particule.get_carre();
