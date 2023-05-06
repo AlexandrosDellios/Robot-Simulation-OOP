@@ -44,6 +44,11 @@ namespace simulation
 	Data update_data(int& p);
 	void draw_all_Robots();
 	void desintegration();
+	bool detect_colli(Robot robot,vector<Neutraliseur>& neut,vector<Reparateur>& rep, 
+														vector<Particule>& parti);
+	bool colli_neut(Robot robot,vector<Neutraliseur>& neut);
+	bool colli_rep(Robot robot,vector<Reparateur>& rep);
+	bool colli_parti(Robot robot, vector<Particule>& parti);
 }
 
 #endif

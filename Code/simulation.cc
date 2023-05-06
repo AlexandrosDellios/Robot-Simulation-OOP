@@ -181,4 +181,72 @@ void simulation::desintegration(){
 	sim.set_particules(updated_particules);
 }
 
+bool simulation::detect_colli(Robot robot,vector<Neutraliseur>& neut,vector<Reparateur>& rep, vector<Particule>& parti)
+{
+	bool reponse(false);
+	reponse = colli_neut(robot, neut);
+	reponse = colli_rep(robot, rep);
+	reponse = colli_parti(robot, parti);
+	return reponse;
+}
+
+bool simulation::colli_neut(Robot robot,vector<Neutraliseur>& neut)
+{
+	int same (0);
+	for (unsigned int i(0); i<neut.size(); ++i)
+	{
+		if ((neut[i].get_cercle().C.x != robot.get_cercle().C.x) and 
+		(neut[i].get_cercle().C.y != robot.get_cercle().C.y))
+		{
+			if(shape::colli_cercle(robot.get_cercle(), neut[i].get_cercle(), false))
+			{
+				return true;
+			}
+		}
+		else if (same == 1)
+		{
+			if(shape::colli_cercle(robot.get_cercle(), neut[i].get_cercle(), false))
+			{
+				return true;
+			}
+		}
+		else same += 1;
+	}
+	return false;
+}
+bool simulation::colli_rep(Robot robot,vector<Reparateur>& rep)
+{
+	int same (0);
+	for (unsigned int i(0); i<rep.size(); ++i)
+	{
+		if ((rep[i].get_cercle().C.x != robot.get_cercle().C.x) 
+		and (rep[i].get_cercle().C.y != robot.get_cercle().C.y))
+		{
+			if(shape::colli_cercle(robot.get_cercle(), rep[i].get_cercle(), false))
+			{
+				return true;
+			}
+		}
+		else if (same == 1)
+		{
+			if(shape::colli_cercle(robot.get_cercle(), rep[i].get_cercle(), false))
+			{
+				return true;
+			}
+		}
+		else same += 1;
+	}	
+	return false;
+}
+bool simulation::colli_parti(Robot robot, vector<Particule>& parti)
+{
+	for (unsigned int i(0); i<parti.size(); ++i)
+	{
+		if(shape::colli_carre_cercle(parti[i].get_carre(),robot.get_cercle(), false))
+		{
+			return true;
+		}
+	}
+	return false;
+}
 void Simulation::set_particules(vector<Particule> p){particules = p;};
