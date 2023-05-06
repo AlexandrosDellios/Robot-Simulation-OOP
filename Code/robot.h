@@ -12,6 +12,8 @@
 #include "shape.h"
 #include "particule.h"
 
+constexpr double max_delta_tr(5.);
+
 using namespace std;
 
 struct Data
@@ -29,12 +31,15 @@ protected:
 	Robot(double x, double y, double r) : cercle({{x,y},r}){}
 public :
 	Cercle get_cercle();
+	void move_to(S2d goal) {cercle.C = goal;}
 };
 
 class Reparateur : public Robot
 {
 public:
 	Reparateur(double x, double y, double r) : Robot(x,y,r){}
+	void move_to(S2d goal);
+	
 };
 
 class Neutraliseur : public Robot

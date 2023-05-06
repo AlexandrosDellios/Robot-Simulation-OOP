@@ -1,6 +1,7 @@
 /* Projet Propre en ordre 2023
  * Leo Sierra 341942
  * Alexandros Dellios 355873
+ * ALEXANDROS : 100%
 */
 
 #include <cmath>
@@ -70,4 +71,22 @@ void shape::draw_robotSpa(double rayon, double xc, double yc)
 void shape::draw_parti(double cote, double xc, double yc)
 {
 	graphic_draw_square(cote,xc,yc,RED,FILLED,GREY);
+}
+
+double shape::s2d_norm(S2d co)
+{
+	double norme (sqrt((co.x*co.x*)+(co.y*co.y*)));
+	return norme;	
+}
+
+double shape::s2d_prod_scal(S2d v1, S2d v2)
+{
+	double scal (v1.x * v2.x + v1.y * v2.y);
+	return scal;
+}
+
+void shape::s2d_add_scaled_vector(S2d& pos, const S2d& pos_to_goal, double scaling)
+{
+	
+	
 }
