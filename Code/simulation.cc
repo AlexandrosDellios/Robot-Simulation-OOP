@@ -144,6 +144,20 @@ bool simulation::mise_a_jour()
 	else desintegration();
 	sim.get_spatial().add_update();
 	
+	for(size_t i; i < sim.get_neutraliseurs().size(); i ++)
+	{
+		Neutraliseur copie = sim.get_neutraliseurs()[i];
+		copie.move_to(sim.get_particules()[0].get_carre().C);
+		//if(!detect_colli(copie, sim.get_neutraliseurs(), sim.get_reparateurs(), sim.get_particules())) update_neutraliseur(copie, i);
+	}
+	
+	for(size_t i; i < sim.get_reparateurs().size(); i ++)
+	{
+		Reparateur copie = sim.get_reparateurs()[i];
+		copie.move_to(sim.get_neutraliseurs()[0].get_cercle().C);
+		//if(!detect_colli(copie, sim.get_neutraliseurs(), sim.get_reparateurs(), sim.get_particules())) update_neutraliseur(copie, i);
+	}
+	
 	return 0;
 }
 
@@ -182,3 +196,5 @@ void simulation::desintegration(){
 }
 
 void Simulation::set_particules(vector<Particule> p){particules = p;};
+void Simulation::update_neutraliseur(Neutraliseur n, int i){neutraliseurs[i] = n;};
+void Simulation::update_reparateur(Reparateur r, int i){reparateurs[i] = r;};

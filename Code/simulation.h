@@ -15,7 +15,7 @@
 
 class Simulation
 {
-public :
+private :
 	vector<Particule> particules;
 	Spatial spatial;
 	vector<Reparateur> reparateurs;
@@ -34,6 +34,9 @@ public :
 	string get_filename(){return filename;};
 	default_random_engine get_e();
 	void set_particules(vector<Particule> p);
+	void update_neutraliseur(Neutraliseur n, int i);
+	void update_reparateur(Reparateur r, int i);
+	
 };
 
 namespace simulation
