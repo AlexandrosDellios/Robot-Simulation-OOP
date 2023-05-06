@@ -1,7 +1,6 @@
 /* Projet Propre en ordre 2023
  * Leo Sierra 341942
  * Alexandros Dellios 355873
- * Leo : 100%
 */
 #include <iostream>
 #include <cairomm/context.h>

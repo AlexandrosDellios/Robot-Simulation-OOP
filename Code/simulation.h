@@ -39,17 +39,10 @@ namespace simulation
 {
 	void lecture(char* nom_fichier);
 	void sauvegarde(string filename);
-<<<<<<< HEAD
-	void mise_a_jour();
-	Data update_data(int& p);
-	void draw_all_Robots();
-	void boom();
-=======
 	bool mise_a_jour();
 	Data update_data(int& p);
 	void draw_all_Robots();
 	void desintegration();
->>>>>>> Leo
 }
 
 #endif

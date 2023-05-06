@@ -1,21 +1,16 @@
 /* Projet Propre en ordre 2023
  * Leo Sierra 341942
  * Alexandros Dellios 355873
- * Alexandros : 85%
- * Leo : 15%
 */
 
 #include <sstream>
 #include <iostream>
-#include <cmath>
 
 #include "robot.h"
 #include "particule.h"
 #include "message.h"
 #include "shape.h"
 #include "constante.h"
-
-using namespace std;
 
 bool lecture_robot_reparateur(vector<Particule>& particules , string line
 	, vector<Reparateur>& reparateurs, vector<Neutraliseur>& neutraliseurs)
@@ -119,8 +114,7 @@ bool verification_robots(vector<Particule>& particules, Cercle c, bool type
 
 void draw_Robot(vector<Reparateur>& robot, int nb)
 {
-	for (int i(0); i < nb; ++i)
-	{
+	for (int i(0); i < nb; ++i){
 		Cercle c = robot[i].get_cercle();
 		shape::draw_robotRep(c.r,c.C.x, c.C.y);
 	}
@@ -128,47 +122,16 @@ void draw_Robot(vector<Reparateur>& robot, int nb)
 
 void draw_Robot(vector<Neutraliseur>& robot, int nb)
 {
-	for (int i(0); i < nb; ++i)
-	{
+	for (int i(0); i < nb; ++i){
 		Cercle c = robot[i].get_cercle();
 		double alpha = robot[i].get_alpha();
 		bool panne = robot[i].get_panne();
 		shape::draw_robotNeut(c.r,c.C.x, c.C.y, alpha, panne);
 	}
 }
-
-void draw_Robot(Spatial& robot)
-{
+void draw_Robot(Spatial& robot){
 	Cercle c = robot.get_cercle();
 	shape::draw_robotSpa(c.r,c.C.x,c.C.y);
-}
-
-void Reparateur::move_to(S2d goal)
-{
-	S2d pos = cercle.C;
-	S2d pos_to_goal = {goal.x - pos.x, goal.y - pos.y};
-	double norm(shape::S2d_norm(pos_to_goal));
-	if (norm <= max_delta_tr) pos = goal;
-	else shape::S2d_add_scaled_vector(pos, pos_to_goal, max_delta_tr/norm);
-}
-
-void Neutraliseur::move_to(S2d goal)
-{
-	S2d pos = cercle.C;
-	S2d init_pos_to_goal = {goal.x - pos.x, goal.y - pos.y);
-	double proj_goal = shape::s2d_prod_scal(init_pos_to_goal, travel_dir);
-	
-	if(abs(proj_goal) > max_delta_tr)
-	{
-		proj_goal = ((proj_goal > 0) ? 1: -1)*max_delta_tr;
-	}
-	
-	S2d updated_pos_to_goal = {goal.x - pos.x, goal.y - pos.y};
-	double goal_a(atan2(updated_pos_to_goal.y, updated_pos_to_goal.x));
-	double delta_a(goal_a - a);
-	
-	if(abs(delta_a) <= max_delta_rt) a = goal_a;
-	else a+= ((delta_a > 0) ? 1. : -1)*max_delta_rt;
 }
 
 //"getters"
