@@ -1,5 +1,4 @@
 /* Projet Propre en ordre 2023
- * simulation.h
  * Leo Sierra 341942
  * Alexandros Dellios 355873
 */
@@ -40,10 +39,10 @@ namespace simulation
 {
 	void lecture(char* nom_fichier);
 	void sauvegarde(string filename);
-	void mise_a_jour();
+	bool mise_a_jour();
 	Data update_data(int& p);
 	void draw_all_Robots();
-	void boom();
+	void desintegration();
 }
 
 #endif

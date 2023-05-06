@@ -1,8 +1,6 @@
 /* Projet Propre en ordre 2023
- * gui.cc
  * Leo Sierra 341942
  * Alexandros Dellios 355873
- * Leo : 100%
 */
 #include <iostream>
 #include <cairomm/context.h>
@@ -298,7 +296,13 @@ bool Fenetre::on_timeout()
 		return false; // End of Timer 
 	}
 	
-	simulation::mise_a_jour();
+	if(simulation::mise_a_jour())
+	{
+		Button_Start.set_label("start");
+		Button_Step.set_sensitive(true);
+		delete_timer();
+		return true;
+	}
 	update_infos();
 	m_area.draw();
 	return true;

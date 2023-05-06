@@ -1,8 +1,6 @@
 /* Projet Propre en ordre 2023
- * graphic.cc
  * Leo Sierra 341942
  * Alexandros Dellios 355873
- * Alexandros : 100%
 */
 #include <cmath>
 #include "graphic_gui.h"

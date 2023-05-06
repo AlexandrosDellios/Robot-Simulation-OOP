@@ -1,9 +1,6 @@
 /* Projet Propre en ordre 2023
- * simulation.cc
  * Leo Sierra 341942
  * Alexandros Dellios 355873
- * Leo : 80%
- * Alexandros : 20%
 */
 
 #include <fstream>
@@ -135,10 +132,16 @@ void simulation::sauvegarde(string filename)
 	cout << "sauvegarde reussie" << endl;
 }
 
-void simulation::mise_a_jour()
+bool simulation::mise_a_jour()
 {
-	boom();
+	if(sim.get_particules().size()== 0) 
+	{
+		if(sim.get_neutraliseurs().size()==0) return 1;
+	}
+	else desintegration();
 	sim.get_spatial().add_update();
+	
+	return 0;
 }
 
 Data simulation::update_data(int& p)
@@ -154,7 +157,7 @@ void simulation::draw_all_Robots(){
 	draw_particule(sim.get_particules());
 }
 
-void simulation::boom(){
+void simulation::desintegration(){
 	vector<Particule> updated_particules;
 	vector<Particule> temp;
 	vector<Particule> copy_particules = sim.get_particules();
@@ -164,7 +167,7 @@ void simulation::boom(){
 		bernoulli_distribution b(p/copy_particules.size());
 		if(b(e))
 		{
-			temp = desintegration(copy_particules[i]);
+			temp = desintegration_particule(copy_particules[i]);
 			for (auto i: temp)
 			{
 				updated_particules.push_back(i);

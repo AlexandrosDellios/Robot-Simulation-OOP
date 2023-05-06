@@ -1,9 +1,6 @@
 /* Projet Propre en ordre 2023
- * robot.cc
  * Leo Sierra 341942
  * Alexandros Dellios 355873
- * Alexandros : 85%
- * Leo : 15%
 */
 
 #include <sstream>
@@ -115,14 +112,16 @@ bool verification_robots(vector<Particule>& particules, Cercle c, bool type
 	return 0;
 }
 
-void draw_Robot(vector<Reparateur>& robot, int nb){
+void draw_Robot(vector<Reparateur>& robot, int nb)
+{
 	for (int i(0); i < nb; ++i){
 		Cercle c = robot[i].get_cercle();
 		shape::draw_robotRep(c.r,c.C.x, c.C.y);
 	}
 }
 
-void draw_Robot(vector<Neutraliseur>& robot, int nb){
+void draw_Robot(vector<Neutraliseur>& robot, int nb)
+{
 	for (int i(0); i < nb; ++i){
 		Cercle c = robot[i].get_cercle();
 		double alpha = robot[i].get_alpha();

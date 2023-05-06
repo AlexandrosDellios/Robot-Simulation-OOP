@@ -1,5 +1,4 @@
 /* Projet Propre en ordre 2023
- * particule.h
  * Leo Sierra 341942
  * Alexandros Dellios 355873
 */
@@ -26,7 +25,7 @@ bool lecture_particule(vector<Particule>& particules, string line);
 
 bool verification_particule(vector<Particule>& particules, Particule p);
 void draw_particule(vector<Particule>& particules);
-vector<Particule> desintegration(Particule particule);
+vector<Particule> desintegration_particule(Particule particule);
 
 
 #endif

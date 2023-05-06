@@ -1,9 +1,6 @@
 /* Projet Propre en ordre 2023
- * particule.cc
  * Leo Sierra 341942
  * Alexandros Dellios 355873
- * Alexandros : 80%
- * Leo : 20%
 */
 
 #include <sstream>
@@ -67,7 +64,7 @@ void draw_particule(vector<Particule>& particules)
 	}
 }
 
-vector<Particule> desintegration(Particule particule)
+vector<Particule> desintegration_particule(Particule particule)
 {
 	vector<Particule> temp;
 	Carre c = particule.get_carre();
