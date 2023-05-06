@@ -52,6 +52,8 @@ namespace simulation
 	bool colli_neut(Robot robot,vector<Neutraliseur>& neut);
 	bool colli_rep(Robot robot,vector<Reparateur>& rep);
 	bool colli_parti(Robot robot, vector<Particule>& parti);
+	
+	void choix_buts();
 }
 
 #endif

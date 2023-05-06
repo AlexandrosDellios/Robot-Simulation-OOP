@@ -172,6 +172,7 @@ void Neutraliseur::move_to(S2d goal)
 	else alpha += ((delta_a > 0) ? 1. : -1)*vrot_max;
 }
 
+
 //"getters"
 Cercle Robot::get_cercle(){return cercle;};
 void Spatial::add_update(){donnees.nbUpdate++;};

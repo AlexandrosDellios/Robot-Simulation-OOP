@@ -26,10 +26,13 @@ class Robot
 {
 protected:
 	Robot(double x, double y, double r) : cercle({{x,y},r}){}
-	Cercle cercle ;	
+	Cercle cercle ;
+	S2d but = {1000,1000};
 public :
 	Cercle get_cercle();
 	void move_to(S2d goal) {cercle.C = goal;}
+	S2d get_goal() {return but;}
+	void set_goal(S2d goal) { but = goal;}
 };
 
 class Reparateur : public Robot

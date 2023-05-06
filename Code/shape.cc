@@ -42,7 +42,7 @@ bool shape::colli_carre_cercle(Carre S1, Cercle C2, bool test)
 
 	double L(sqrt(pow((abs(C2.C.x - S1.C.x)-(S1.d/2)),2)+
 			pow(abs(C2.C.y -S1.C.y)-(S1.d/2),2)));
-	if (((abs(C2.C.x-S1.C.x) > (S1.d/2)) and (abs(C2.C.y - S1.C.y) - (S1.d/2))) 
+	if (((abs(C2.C.x-S1.C.x) > (S1.d/2)) and (abs(C2.C.y - S1.C.y) > (S1.d/2))) 
 			and (L > (C2.r + e0))) return false;
 	else if ((abs(C2.C.x - S1.C.x) < ((S1.d/2)+C2.r+e0)) 
 				and (abs(C2.C.y - S1.C.y) < ((S1.d/2)+C2.r+e0))) return true;		
@@ -90,4 +90,12 @@ void shape::s2d_add_scaled_vector(S2d& pos, const S2d& pos_to_goal, double scali
 {
 	pos.x += pos_to_goal.x * scaling;
 	pos.y += pos_to_goal.y * scaling;
+}
+
+S2d operator -(S2d p1, S2d p2)
+{
+	S2d temp = {0.,0.};
+	temp.x = p1.x - p2.x;
+	temp.y = p1.y - p2.y;
+	return temp;
 }

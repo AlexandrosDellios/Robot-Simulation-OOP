@@ -29,7 +29,8 @@ namespace shape
 	double s2d_norm(S2d co);
 	double s2d_prod_scal(S2d v1, S2d v2);
 	void s2d_add_scaled_vector(S2d& pos, const S2d& pos_to_goal, double scaling);
-	
 }
+
+S2d operator- (S2d p1, S2d p2);
 
 #endif
