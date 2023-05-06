@@ -1,4 +1,5 @@
 /* Projet Propre en ordre 2023
+ * gui.cc
  * Leo Sierra 341942
  * Alexandros Dellios 355873
  * Leo : 100%
@@ -45,7 +46,7 @@ robots neutraliseurs en réserve:"),
 	
 	timer_added(false),// to handle a single timer
 	disconnect(false), // to handle a single timer
-	timeout_value(250) // 250 ms
+	timeout_value(20) // 20 ms
 {
 	set_title("Propre en Ordre");
 	set_resizable(true);
@@ -297,7 +298,6 @@ bool Fenetre::on_timeout()
 		return false; // End of Timer 
 	}
 	
-	simulation::mise_a_jour();
 	if(simulation::mise_a_jour())
 	{
 		Button_Start.set_label("start");

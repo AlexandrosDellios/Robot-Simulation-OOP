@@ -1,4 +1,5 @@
 /* Projet Propre en ordre 2023
+ * robot.h
  * Leo Sierra 341942
  * Alexandros Dellios 355873
 */
@@ -12,8 +13,6 @@
 #include "shape.h"
 #include "particule.h"
 
-constexpr double max_delta_tr(5.);
-
 using namespace std;
 
 struct Data
@@ -25,10 +24,9 @@ struct Data
 
 class Robot
 {
-private:	
-	Cercle cercle ;	
 protected:
 	Robot(double x, double y, double r) : cercle({{x,y},r}){}
+	Cercle cercle ;	
 public :
 	Cercle get_cercle();
 	void move_to(S2d goal) {cercle.C = goal;}
@@ -56,6 +54,7 @@ public:
 	int get_c_n();
 	bool get_panne();
 	int get_k_update();
+	void move_to(S2d goal);
 };
 
 class Spatial : public Robot

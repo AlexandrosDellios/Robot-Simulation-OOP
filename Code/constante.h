@@ -1,4 +1,5 @@
 /* Projet Propre en ordre 2023
+ * constante.h
  * Leo Sierra 341942
  * Alexandros Dellios 355873
 */
@@ -14,7 +15,7 @@ constexpr double delta_t(0.125);	// seconde
 constexpr double r_spatial(16.);
 constexpr double r_reparateur(2.);
 constexpr double r_neutraliseur(4.); 
-constexpr double vtran_max(4.); 	// par seconde
+constexpr double vtran_max(1.); 	// par seconde
 constexpr double vrot_max(0.125); 	// rd/s env. 7°/s
 constexpr double epsil_alignement(0.01);	 // rd env. 0.6°
 

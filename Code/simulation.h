@@ -1,4 +1,5 @@
 /* Projet Propre en ordre 2023
+ * simulation.h
  * Leo Sierra 341942
  * Alexandros Dellios 355873
 */
@@ -14,7 +15,7 @@
 
 class Simulation
 {
-private :
+public :
 	vector<Particule> particules;
 	Spatial spatial;
 	vector<Reparateur> reparateurs;

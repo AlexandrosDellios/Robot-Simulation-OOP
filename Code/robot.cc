@@ -1,4 +1,5 @@
 /* Projet Propre en ordre 2023
+ * robot.cc
  * Leo Sierra 341942
  * Alexandros Dellios 355873
  * Alexandros : 85%
@@ -145,30 +146,30 @@ void draw_Robot(Spatial& robot)
 
 void Reparateur::move_to(S2d goal)
 {
-	S2d pos = cercle.C;
-	S2d pos_to_goal = {goal.x - pos.x, goal.y - pos.y};
-	double norm(shape::S2d_norm(pos_to_goal));
-	if (norm <= max_delta_tr) pos = goal;
-	else shape::S2d_add_scaled_vector(pos, pos_to_goal, max_delta_tr/norm);
+	S2d pos_to_goal = {goal.x - cercle.C.x, goal.y - cercle.C.y};
+	double norm(shape::s2d_norm(pos_to_goal));
+	if (norm <= vtran_max) cercle.C = goal;
+	else shape::s2d_add_scaled_vector(cercle.C, pos_to_goal, vtran_max/norm);
 }
 
 void Neutraliseur::move_to(S2d goal)
 {
-	S2d pos = cercle.C;
-	S2d init_pos_to_goal = {goal.x - pos.x, goal.y - pos.y);
+	S2d init_pos_to_goal = {goal.x -  cercle.C.x, goal.y - cercle.C.y};
+	S2d travel_dir = {cos(alpha),sin(alpha)};
 	double proj_goal = shape::s2d_prod_scal(init_pos_to_goal, travel_dir);
 	
-	if(abs(proj_goal) > max_delta_tr)
+	if(abs(proj_goal) > vtran_max)
 	{
-		proj_goal = ((proj_goal > 0) ? 1: -1)*max_delta_tr;
+		proj_goal = ((proj_goal > 0) ? 1: -1)*vtran_max;
 	}
+	shape::s2d_add_scaled_vector(cercle.C, travel_dir,proj_goal);
 	
-	S2d updated_pos_to_goal = {goal.x - pos.x, goal.y - pos.y};
+	S2d updated_pos_to_goal = {goal.x - cercle.C.x, goal.y - cercle.C.y};
 	double goal_a(atan2(updated_pos_to_goal.y, updated_pos_to_goal.x));
-	double delta_a(goal_a - a);
+	double delta_a(goal_a - alpha);
 	
-	if(abs(delta_a) <= max_delta_rt) a = goal_a;
-	else a+= ((delta_a > 0) ? 1. : -1)*max_delta_rt;
+	if(abs(delta_a) <= vrot_max) alpha = goal_a;
+	else alpha += ((delta_a > 0) ? 1. : -1)*vrot_max;
 }
 
 //"getters"

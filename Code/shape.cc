@@ -1,4 +1,5 @@
 /* Projet Propre en ordre 2023
+ * shape.cc
  * Leo Sierra 341942
  * Alexandros Dellios 355873
  * ALEXANDROS : 100%
@@ -75,7 +76,7 @@ void shape::draw_parti(double cote, double xc, double yc)
 
 double shape::s2d_norm(S2d co)
 {
-	double norme (sqrt((co.x*co.x*)+(co.y*co.y*)));
+	double norme (sqrt((co.x*co.x)+(co.y*co.y)));
 	return norme;	
 }
 
@@ -87,6 +88,6 @@ double shape::s2d_prod_scal(S2d v1, S2d v2)
 
 void shape::s2d_add_scaled_vector(S2d& pos, const S2d& pos_to_goal, double scaling)
 {
-	
-	
+	pos.x += pos_to_goal.x * scaling;
+	pos.y += pos_to_goal.y * scaling;
 }
