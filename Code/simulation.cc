@@ -198,20 +198,50 @@ bool simulation::mise_a_jour()
 
 void simulation::choix_buts()
 {
-	vector<Particule> p = sim.get_particules();
+	vector<Particule> p = tri_particules(sim.get_particules());
 	vector<Neutraliseur> n = sim.get_neutraliseurs();
-	for(size_t j=0; j < n.size(); j++)
+	size_t min;
+	for(size_t i=0; i < p.size(); i++)
 	{
-		n[j].set_goal({1000,1000});
-		for(size_t i=0; i < p.size(); i++)
+		if(i > n.size()-1)break;
+		n[i].set_goal(p[i].get_carre().C);
+		min = i;
+		for(size_t j=min; j < n.size(); j++)
 		{
-			if(shape::s2d_norm(p[i].get_carre().C-n[j].get_cercle().C) < (shape::s2d_norm(n[j].get_goal() - n[j].get_cercle().C) + shape::epsil_zero))
+			if(shape::s2d_norm(p[i].get_carre().C-n[j].get_cercle().C) <
+				shape::s2d_norm(p[i].get_carre().C-n[min].get_cercle().C))
 			{
-				n[j].set_goal(p[i].get_carre().C);
-				sim.update_neutraliseur(n[j],j);
+				min = j;
 			}
 		}
+		if(i != min)
+		{
+			n[min].set_goal(p[i].get_carre().C);
+			swap(n[min],n[i]);
+		}
 	}
+	for(size_t j=0; j < n.size(); j++) sim.update_neutraliseur(n[j],j);
+}
+
+vector<Particule> simulation::tri_particules(vector<Particule> p)
+{
+	size_t max;
+	for (size_t i = 0; i < p.size(); i++)
+	{
+		max = i;
+		for (size_t j = max; j < p.size(); j++)
+		{
+			if (p[j].get_carre().d > p[max].get_carre().d)
+			{
+				max = j;
+			}
+		}
+		if (max != i)
+		{
+			swap(p[i], p[max]);
+		}
+	}
+	return p;
 }
 
 Data simulation::update_data(int& p)

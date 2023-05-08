@@ -54,6 +54,7 @@ namespace simulation
 	bool colli_parti(Robot robot, vector<Particule>& parti);
 	
 	void choix_buts();
+	vector<Particule> tri_particules(vector<Particule> p);
 }
 
 #endif
