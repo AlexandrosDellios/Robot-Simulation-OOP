@@ -57,7 +57,8 @@ public:
 	int get_c_n();
 	bool get_panne();
 	int get_k_update();
-	void move_to(S2d goal);
+	void move_to(S2d goal, int type);
+	void set_type(int a);
 };
 
 class Spatial : public Robot
@@ -90,5 +91,10 @@ bool verification_spatial(Spatial &spatial, vector<Particule> &particules);
 void draw_Robot(vector<Neutraliseur>& robot,int nb);
 void draw_Robot(vector<Reparateur>& robot, int nb);
 void draw_Robot(Spatial& robot);
+void move_type0(S2d& goal, S2d& centre, double& alpha);
+void move_type1(S2d& goal, S2d& centre, double& alpha);
+void move_type2(S2d& goal, S2d& centre, double& alpha);
+void aligner_ortho(S2d& goal, S2d& centre, double& alpha);
+void converti_angle(double& a);
 
 #endif

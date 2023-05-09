@@ -152,9 +152,68 @@ void Reparateur::move_to(S2d goal)
 	else shape::s2d_add_scaled_vector(cercle.C, pos_to_goal, vtran_max/norm);
 }
 
-void Neutraliseur::move_to(S2d goal)
+void Neutraliseur::move_to(S2d goal, int type)
 {
-	S2d init_pos_to_goal = {goal.x -  cercle.C.x, goal.y - cercle.C.y};
+	switch(type)
+	{
+		case 0:
+			move_type0(goal, cercle.C, alpha);
+		break;
+		case 1:
+			//move_type1(goal);
+		break;
+		case 2:
+			move_type2(goal,cercle.C, alpha);
+		break;
+		default:
+		break;
+	}
+}
+
+void move_type0(S2d& goal, S2d& centre, double& alpha)
+{
+	S2d updated_pos_to_goal = {goal.x - centre.x, goal.y - centre.y};
+	double goal_a(atan2(updated_pos_to_goal.y, updated_pos_to_goal.x));
+	if (goal_a != alpha)
+	{
+		double delta_a(goal_a - alpha);
+		converti_angle(delta_a);
+		if(abs(delta_a) <= vrot_max) alpha = goal_a;
+		
+		else if (delta_a > 0)
+		{
+			alpha += delta_a*vrot_max;
+		}
+		else if (delta_a < 0)
+		{
+			alpha += delta_a*vrot_max;
+		}
+	}
+	if (goal_a == alpha)
+	{
+		S2d init_pos_to_goal = {goal.x -  centre.x, goal.y - centre.y};
+		S2d travel_dir = {cos(alpha),sin(alpha)};
+		double proj_goal = shape::s2d_prod_scal(init_pos_to_goal, travel_dir);
+		
+		if(abs(proj_goal) > vtran_max)
+		{
+			proj_goal = ((proj_goal > 0) ? 1: -1)*vtran_max;
+		}
+		shape::s2d_add_scaled_vector(centre, travel_dir,proj_goal);	
+	}
+}
+
+void move_type1(S2d& goal, S2d& centre, double& alpha)
+{
+	S2d goal_ext;
+	move_type0(goal_ext, centre, alpha); //goal_ext a determiner
+	
+	
+}
+
+void move_type2(S2d& goal, S2d& centre, double& alpha)
+{
+	S2d init_pos_to_goal = {goal.x -  centre.x, goal.y - centre.y};
 	S2d travel_dir = {cos(alpha),sin(alpha)};
 	double proj_goal = shape::s2d_prod_scal(init_pos_to_goal, travel_dir);
 	
@@ -162,9 +221,9 @@ void Neutraliseur::move_to(S2d goal)
 	{
 		proj_goal = ((proj_goal > 0) ? 1: -1)*vtran_max;
 	}
-	shape::s2d_add_scaled_vector(cercle.C, travel_dir,proj_goal);
+	shape::s2d_add_scaled_vector(centre, travel_dir,proj_goal);
 	
-	S2d updated_pos_to_goal = {goal.x - cercle.C.x, goal.y - cercle.C.y};
+	S2d updated_pos_to_goal = {goal.x - centre.x, goal.y - centre.y};
 	double goal_a(atan2(updated_pos_to_goal.y, updated_pos_to_goal.x));
 	double delta_a(goal_a - alpha);
 	
@@ -172,7 +231,23 @@ void Neutraliseur::move_to(S2d goal)
 	else alpha += ((delta_a > 0) ? 1. : -1)*vrot_max;
 }
 
+void aligner_ortho(S2d& goal, S2d& centre, double& alpha)
+{
+	//if (centre.x < goal.x
+	
+}
 
+void converti_angle(double& a)
+{
+	if(a>M_PI)
+	{
+		a=-M_PI+(a-M_PI);
+	}
+	if (a<-M_PI)
+	{
+		a=M_PI+(M_PI+a);
+	}
+}
 //"getters"
 Cercle Robot::get_cercle(){return cercle;};
 void Spatial::add_update(){donnees.nbUpdate++;};
@@ -181,3 +256,4 @@ double Neutraliseur::get_alpha(){return alpha;};
 int Neutraliseur::get_c_n(){return c_n;};
 bool Neutraliseur::get_panne(){return panne;};
 int Neutraliseur::get_k_update(){return k_update;};
+void Neutraliseur::set_type(int a){c_n = a;};

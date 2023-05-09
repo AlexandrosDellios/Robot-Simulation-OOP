@@ -145,7 +145,7 @@ bool simulation::mise_a_jour()
 			Neutraliseur before = sim.get_neutraliseurs()[i];
 			Neutraliseur copie = before;
 			copie.set_goal(sim.get_spatial().get_cercle().C);
-			copie.move_to(copie.get_goal());
+			copie.move_to(copie.get_goal(), 0);
 			sim.update_neutraliseur(copie, i);
 			if(detect_colli(copie, sim.get_neutraliseurs(), sim.get_reparateurs(), sim.get_particules())) sim.update_neutraliseur(before, i);
 		}
@@ -168,7 +168,7 @@ bool simulation::mise_a_jour()
 		{
 			Neutraliseur before = sim.get_neutraliseurs()[i];
 			Neutraliseur copie = before;
-			copie.move_to(copie.get_goal());
+			copie.move_to(copie.get_goal(), 0);
 			sim.update_neutraliseur(copie, i);
 			if(detect_colli(copie, sim.get_neutraliseurs(), sim.get_reparateurs(), sim.get_particules())) sim.update_neutraliseur(before, i);
 			vector<Particule> temp;
