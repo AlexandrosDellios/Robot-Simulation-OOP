@@ -149,24 +149,27 @@ void Reparateur::move_to(S2d goal)
 	S2d pos_to_goal = {goal.x - cercle.C.x, goal.y - cercle.C.y};
 	double norm(shape::s2d_norm(pos_to_goal));
 	if (norm <= vtran_max) cercle.C = goal;
-	else shape::s2d_add_scaled_vector(cercle.C, pos_to_goal, vtran_max/norm);
+	else shape::s2d_add_scaled_vector(cercle.C, pos_to_goal, vtran_max/norm*delta_t);
 }
 
-void Neutraliseur::move_to(S2d goal, int type)
+void Neutraliseur::move_to(S2d goal, int type, Neutraliseur& neut)
 {
-	switch(type)
+	if (alignement == false)
 	{
-		case 0:
-			move_type0(goal, cercle.C, alpha);
-		break;
-		case 1:
-			//move_type1(goal);
-		break;
-		case 2:
-			move_type2(goal,cercle.C, alpha);
-		break;
-		default:
-		break;
+		switch(type)
+		{
+			case 0:
+				move_type0(goal, cercle.C, alpha);
+			break;
+			case 1:
+				move_type1(goal,cercle.C, alpha, neut);
+			break;
+			case 2:
+				move_type2(goal,cercle.C, alpha);
+			break;
+			default:
+			break;
+		}
 	}
 }
 
@@ -195,20 +198,47 @@ void move_type0(S2d& goal, S2d& centre, double& alpha)
 		S2d travel_dir = {cos(alpha),sin(alpha)};
 		double proj_goal = shape::s2d_prod_scal(init_pos_to_goal, travel_dir);
 		
-		if(abs(proj_goal) > vtran_max)
+		if(abs(proj_goal) > vtran_max*delta_t)
 		{
-			proj_goal = ((proj_goal > 0) ? 1: -1)*vtran_max;
+			proj_goal = ((proj_goal > 0) ? 1: -1)*vtran_max*delta_t;
 		}
 		shape::s2d_add_scaled_vector(centre, travel_dir,proj_goal);	
 	}
 }
 
-void move_type1(S2d& goal, S2d& centre, double& alpha)
+void move_type1(S2d& goal, S2d& centre, double& alpha, Neutraliseur& neut)
 {
 	S2d goal_ext;
-	move_type0(goal_ext, centre, alpha); //goal_ext a determiner
-	
-	
+	if (centre.x >= goal.x+neut.get_d_target()/2)
+	{
+		goal_ext.x = goal.x+((neut.get_d_target()/2)*risk_factor)+1;
+		goal_ext.y = goal.y;
+	}
+	if (centre.x <= goal.x-neut.get_d_target()/2)
+	{
+		goal_ext.x = goal.x-((neut.get_d_target()/2)*risk_factor)-1;
+		goal_ext.y = goal.y;
+	}
+	if ((centre.x <= goal.x+neut.get_d_target()/2) 
+	and (centre.x >= goal.x-neut.get_d_target()/2) 
+	and (centre.y >= goal.y+neut.get_d_target()/2))
+	{
+		goal_ext.x = goal.x;
+		goal_ext.y = goal.y+((neut.get_d_target()/2)*risk_factor)+1;
+	}
+	if ((centre.x <= goal.x+neut.get_d_target()/2) 
+	and (centre.x >= goal.x-neut.get_d_target()/2) 
+	and (centre.y <= goal.y-neut.get_d_target()/2))
+	{
+		goal_ext.x = goal.x;
+		goal_ext.y = goal.y-((neut.get_d_target()/2)*risk_factor)-1;
+	}
+	move_type0(goal_ext, centre, alpha); //goal_ext determine
+	if ((centre.x == goal_ext.x) and (centre.y == goal_ext.y))
+	{
+		neut.aligner_ortho(goal, neut.get_d_target());
+	}
+	move_type0(goal, centre, alpha);
 }
 
 void move_type2(S2d& goal, S2d& centre, double& alpha)
@@ -231,10 +261,72 @@ void move_type2(S2d& goal, S2d& centre, double& alpha)
 	else alpha += ((delta_a > 0) ? 1. : -1)*vrot_max;
 }
 
-void aligner_ortho(S2d& goal, S2d& centre, double& alpha)
+void Neutraliseur::aligner_ortho(S2d goal, double d)
 {
-	//if (centre.x < goal.x
+	S2d centre(cercle.C);
+	alignement = true;
+	if ((centre.x < (goal.x-(d/2))) and (centre.y < (goal.y+(d/2))) 
+	and (centre.y > (goal.y-(d/2))))
+	{
+		alpha = 0;
+		//rotation(goal,centre,alpha,0);
+		if ((alpha > 0-epsil_alignement) and (alpha < 0+epsil_alignement))
+		{
+			alignement = false;
+			//temp.pop_back();
+		}
+	}	
+	if ((centre.x > (goal.x-(d/2))) and (centre.x < (goal.x+(d/2))) and (centre.y > (goal.y+(d/2))))
+	{
+		alpha = -M_PI/2;
+		//rotation(goal,centre,alpha,-M_PI/2);
+		if ((alpha > (-M_PI/2)-epsil_alignement) and (alpha < (-M_PI/2)+epsil_alignement))
+		{
+			alignement = false;
+			//temp.pop_back();
+		}
+	}	
+
+	if ((centre.x > (goal.x+(d/2))) and (centre.y < (goal.y+(d/2))) 
+	and (centre.y > (goal.y-(d/2))))
+	{
+		alpha = M_PI;
+		//rotation(goal,centre,alpha, M_PI);
+		if ((alpha > M_PI-epsil_alignement) and (alpha < M_PI+epsil_alignement))
+		{
+			//temp.pop_back();
+			alignement = false;
+		}
+	}	
+	if ((centre.x > (goal.x-(d/2))) and (centre.x < (goal.x+(d/2))) and (centre.y < (goal.y-(d/2))))
+	{
+		alpha = M_PI/2;
+		//rotation(goal,centre,alpha,M_PI/2);
+		if ((alpha > (M_PI/2)-epsil_alignement) and (alpha < (M_PI/2)+epsil_alignement))
+		{
+			alignement = false;
+			//temp.pop_back();
+		}
+	}	
+}
+
+
+void rotation(S2d& goal, S2d& centre, double& alpha, double new_a)
+{
+	double goal_a(new_a);
+	double delta_a(goal_a - alpha);
+	converti_angle(alpha);
 	
+	if(abs(delta_a) <= vrot_max*delta_t) alpha = goal_a;
+	
+	else if (delta_a > 0)
+	{
+		alpha += delta_a*vrot_max;
+	}
+	else if (delta_a < 0)
+	{
+		alpha += delta_a*vrot_max;
+	}
 }
 
 void converti_angle(double& a)
@@ -248,6 +340,7 @@ void converti_angle(double& a)
 		a=M_PI+(M_PI+a);
 	}
 }
+
 //"getters"
 Cercle Robot::get_cercle(){return cercle;};
 void Spatial::add_update(){donnees.nbUpdate++;};
@@ -255,5 +348,11 @@ Data Spatial::get_donnees(){return donnees;};
 double Neutraliseur::get_alpha(){return alpha;};
 int Neutraliseur::get_c_n(){return c_n;};
 bool Neutraliseur::get_panne(){return panne;};
+void Neutraliseur::set_colision(bool etat){colision = etat;};
 int Neutraliseur::get_k_update(){return k_update;};
 void Neutraliseur::set_type(int a){c_n = a;};
+bool Neutraliseur::get_colision(){return colision;};
+void Neutraliseur::set_d_target(double d){d_target=d;};
+double Neutraliseur::get_d_target(){return d_target;};
+void Neutraliseur::set_alignement(bool align){alignement = align;};
+double Neutraliseur::get_alignement(){return alignement;};

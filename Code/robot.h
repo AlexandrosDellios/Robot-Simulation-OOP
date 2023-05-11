@@ -50,15 +50,25 @@ private:
 	int c_n;
 	bool panne;
 	int k_update;
+	bool colision;
+	double d_target;
+	bool alignement = false;
 public:
 	Neutraliseur(double x, double y, double r, double a, int c,bool p, int k): 
 		Robot(x,y,r), alpha(a), c_n(c), panne(p),k_update(k){};
 	double get_alpha();
 	int get_c_n();
 	bool get_panne();
+	void set_colision(bool etat);
 	int get_k_update();
-	void move_to(S2d goal, int type);
+	bool get_colision();
+	void move_to(S2d goal, int type, Neutraliseur& neut);
 	void set_type(int a);
+	void aligner_ortho(S2d goal, double d);
+	void set_d_target(double d);
+	double get_d_target();
+	void set_alignement(bool align);
+	double get_alignement();
 };
 
 class Spatial : public Robot
@@ -92,9 +102,9 @@ void draw_Robot(vector<Neutraliseur>& robot,int nb);
 void draw_Robot(vector<Reparateur>& robot, int nb);
 void draw_Robot(Spatial& robot);
 void move_type0(S2d& goal, S2d& centre, double& alpha);
-void move_type1(S2d& goal, S2d& centre, double& alpha);
+void move_type1(S2d& goal, S2d& centre, double& alpha, Neutraliseur& neut);
 void move_type2(S2d& goal, S2d& centre, double& alpha);
-void aligner_ortho(S2d& goal, S2d& centre, double& alpha);
+void rotation(S2d& goal, S2d& centre, double& alpha, double new_a);
 void converti_angle(double& a);
 
 #endif
