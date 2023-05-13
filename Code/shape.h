@@ -21,7 +21,7 @@ namespace shape
 	bool colli_cercle(Cercle C1, Cercle C2, bool test);
 	bool colli_carre_cercle(Carre S1, Cercle C2, bool test);
 	void draw_robotNeut(double rayon, double xc, double yc, double alpha, 
-						bool panne);
+						bool panne, bool collision);
 	void draw_robotRep(double rayon, double xc, double yc);
 	void draw_robotSpa(double rayon, double xc, double yc);
 	void draw_parti(double cote, double xc, double yc);

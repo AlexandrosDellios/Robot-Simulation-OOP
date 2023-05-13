@@ -50,14 +50,15 @@ bool shape::colli_carre_cercle(Carre S1, Cercle C2, bool test)
 }
 
 void shape::draw_robotNeut(double rayon, double xc, double yc, double alpha, 
-							bool panne)
+							bool panne, bool collision)
 {
 	if (panne == true){
 		graphic_draw_circle(rayon,xc,yc,ORANGE,UNFILLED,WHITE,1,alpha);
 	}
-	if (panne == false){
-		graphic_draw_circle(rayon,xc,yc,BLACK,UNFILLED,WHITE,1,alpha);
+	else if (collision == true){
+		graphic_draw_circle(rayon,xc,yc,PURPLE,UNFILLED,WHITE,1,alpha);
 	}
+	else graphic_draw_circle(rayon,xc,yc,BLACK,UNFILLED,WHITE,1,alpha);
 }
 
 void shape::draw_robotRep(double rayon, double xc, double yc)

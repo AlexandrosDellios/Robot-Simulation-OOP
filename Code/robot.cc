@@ -134,7 +134,8 @@ void draw_Robot(vector<Neutraliseur>& robot, int nb)
 		Cercle c = robot[i].get_cercle();
 		double alpha = robot[i].get_alpha();
 		bool panne = robot[i].get_panne();
-		shape::draw_robotNeut(c.r,c.C.x, c.C.y, alpha, panne);
+		bool collision = robot[i].get_collision();
+		shape::draw_robotNeut(c.r,c.C.x, c.C.y, alpha, panne, collision);
 	}
 }
 
@@ -152,24 +153,25 @@ void Reparateur::move_to(S2d goal)
 	else shape::s2d_add_scaled_vector(cercle.C, pos_to_goal, vtran_max/norm*delta_t);
 }
 
-void Neutraliseur::move_to(S2d goal, int type, Neutraliseur& neut)
+void Neutraliseur::move_to(S2d goal, int type)
 {
-	if (alignement == false)
+	S2d travel_dir = {cos(alpha),sin(alpha)};
+	switch(type)
 	{
-		switch(type)
-		{
-			case 0:
-				move_type0(goal, cercle.C, alpha);
-			break;
-			case 1:
-				move_type1(goal,cercle.C, alpha, neut);
-			break;
-			case 2:
-				move_type2(goal,cercle.C, alpha);
-			break;
-			default:
-			break;
-		}
+		case 0:
+			move_type0(goal, cercle.C, alpha);
+		break;
+		case 1:
+			move_type1(goal,cercle.C, alpha, *this);
+		break;
+		case 2:
+			move_type2(goal,cercle.C, alpha);
+		break;
+		case 3:
+			shape::s2d_add_scaled_vector(cercle.C, travel_dir,vtran_max*delta_t);	
+		break;
+		default:
+		break;
 	}
 }
 
@@ -181,15 +183,15 @@ void move_type0(S2d& goal, S2d& centre, double& alpha)
 	{
 		double delta_a(goal_a - alpha);
 		converti_angle(delta_a);
-		if(abs(delta_a) <= vrot_max) alpha = goal_a;
+		if(abs(delta_a) <= vrot_max*delta_t) alpha = goal_a;
 		
 		else if (delta_a > 0)
 		{
-			alpha += delta_a*vrot_max;
+			alpha += delta_t*vrot_max;
 		}
 		else if (delta_a < 0)
 		{
-			alpha += delta_a*vrot_max;
+			alpha -= delta_t*vrot_max;
 		}
 	}
 	if (goal_a == alpha)
@@ -260,20 +262,16 @@ void move_type2(S2d& goal, S2d& centre, double& alpha)
 	if(abs(delta_a) <= vrot_max) alpha = goal_a;
 	else alpha += ((delta_a > 0) ? 1. : -1)*vrot_max;
 }
-
-void Neutraliseur::aligner_ortho(S2d goal, double d)
+/*
+bool Neutraliseur::aligner_ortho(S2d goal, double d)
 {
 	S2d centre(cercle.C);
-	alignement = true;
-	if ((centre.x < (goal.x-(d/2))) and (centre.y < (goal.y+(d/2))) 
-	and (centre.y > (goal.y-(d/2))))
+	if ((centre.x < (goal.x-(d/2))) and (centre.y < (goal.y+(d/2))) and (centre.y > (goal.y-(d/2))))
 	{
 		alpha = 0;
-		//rotation(goal,centre,alpha,0);
 		if ((alpha > 0-epsil_alignement) and (alpha < 0+epsil_alignement))
 		{
-			alignement = false;
-			//temp.pop_back();
+			return true;
 		}
 	}	
 	if ((centre.x > (goal.x-(d/2))) and (centre.x < (goal.x+(d/2))) and (centre.y > (goal.y+(d/2))))
@@ -282,8 +280,7 @@ void Neutraliseur::aligner_ortho(S2d goal, double d)
 		//rotation(goal,centre,alpha,-M_PI/2);
 		if ((alpha > (-M_PI/2)-epsil_alignement) and (alpha < (-M_PI/2)+epsil_alignement))
 		{
-			alignement = false;
-			//temp.pop_back();
+			return true;
 		}
 	}	
 
@@ -294,8 +291,7 @@ void Neutraliseur::aligner_ortho(S2d goal, double d)
 		//rotation(goal,centre,alpha, M_PI);
 		if ((alpha > M_PI-epsil_alignement) and (alpha < M_PI+epsil_alignement))
 		{
-			//temp.pop_back();
-			alignement = false;
+			return true;
 		}
 	}	
 	if ((centre.x > (goal.x-(d/2))) and (centre.x < (goal.x+(d/2))) and (centre.y < (goal.y-(d/2))))
@@ -304,29 +300,78 @@ void Neutraliseur::aligner_ortho(S2d goal, double d)
 		//rotation(goal,centre,alpha,M_PI/2);
 		if ((alpha > (M_PI/2)-epsil_alignement) and (alpha < (M_PI/2)+epsil_alignement))
 		{
-			alignement = false;
-			//temp.pop_back();
+			return true;
 		}
-	}	
+	}
+	return false;
+}*/
+
+bool Neutraliseur::aligner_ortho(S2d goal, double d)
+{
+	S2d centre(cercle.C);
+	double alpha_goal = alpha;
+	double dx = centre.x - goal.x;
+	double dy = centre.y -goal.y;
+	if (dx > 0)
+	{
+		if(dy > 0)
+		{
+			if(abs(dy) > abs(dx)) alpha_goal = M_PI * (-1./2.);
+			else if(abs(dx) > abs(dy)) alpha_goal = -M_PI;
+			else alpha_goal = M_PI * (-3./4.);
+		}
+		else if(dy < 0)
+		{
+			if(abs(dy) > abs(dx)) alpha_goal = M_PI * 1./2.;
+			else if(abs(dx) > abs(dy)) alpha_goal = M_PI;
+			else alpha_goal = M_PI * 3./4.;
+		}
+		else alpha_goal = M_PI;
+	}
+	else if (dx < 0)
+	{
+		if(dy > 0)
+		{
+			if(abs(dy) > abs(dx)) alpha_goal = M_PI * (-1./2.);
+			else if(abs(dx) > abs(dy)) alpha_goal = 0;
+			else alpha_goal = M_PI * (-1./4.);
+		}
+		else if(dy < 0)
+		{
+			if(abs(dy) > abs(dx)) alpha_goal = M_PI * 1./2.;
+			else if(abs(dx) > abs(dy)) alpha_goal = 0;
+			else alpha_goal = M_PI * 1./4.;
+		}
+		else alpha_goal = 0;
+	}
+	else
+	{
+		if(dy > 0) alpha_goal = M_PI * (-1./2.);
+		else alpha_goal = M_PI * 1./2.;
+	}
+
+	rotation(alpha_goal);
+	if ((alpha < (alpha_goal + epsil_alignement)) and (alpha > (alpha_goal- epsil_alignement)))
+	{
+		return true;
+	}
+	return false;
 }
 
-
-void rotation(S2d& goal, S2d& centre, double& alpha, double new_a)
+void Neutraliseur::rotation(double alpha_goal)
 {
-	double goal_a(new_a);
-	double delta_a(goal_a - alpha);
-	converti_angle(alpha);
-	
-	if(abs(delta_a) <= vrot_max*delta_t) alpha = goal_a;
-	
+	cout << "goal " << alpha_goal << " angle actuel " << alpha << endl;
+	double delta_a(alpha_goal - alpha);
+	if(abs(delta_a) <= vrot_max*delta_t) alpha = alpha_goal;
 	else if (delta_a > 0)
 	{
-		alpha += delta_a*vrot_max;
+		alpha += vrot_max*delta_t;
 	}
 	else if (delta_a < 0)
 	{
-		alpha += delta_a*vrot_max;
+		alpha -= vrot_max*delta_t;
 	}
+	cout << "nouvel angle " << alpha << endl;
 }
 
 void converti_angle(double& a)
@@ -348,11 +393,11 @@ Data Spatial::get_donnees(){return donnees;};
 double Neutraliseur::get_alpha(){return alpha;};
 int Neutraliseur::get_c_n(){return c_n;};
 bool Neutraliseur::get_panne(){return panne;};
-void Neutraliseur::set_colision(bool etat){colision = etat;};
+void Neutraliseur::set_collision(bool etat){collision = etat;};
 int Neutraliseur::get_k_update(){return k_update;};
 void Neutraliseur::set_type(int a){c_n = a;};
-bool Neutraliseur::get_colision(){return colision;};
+bool Neutraliseur::get_collision(){return collision;};
 void Neutraliseur::set_d_target(double d){d_target=d;};
 double Neutraliseur::get_d_target(){return d_target;};
-void Neutraliseur::set_alignement(bool align){alignement = align;};
-double Neutraliseur::get_alignement(){return alignement;};
+void Neutraliseur::set_alignement(bool a){alignement=a;};
+bool Neutraliseur::get_alignement(){return alignement;};

@@ -89,5 +89,25 @@ vector<Particule> desintegration_particule(Particule particule)
 	return temp;
 }
 
+vector<Particule> tri_particules(vector<Particule> p)
+{
+	size_t max;
+	for (size_t i = 0; i < p.size(); i++)
+	{
+		max = i;
+		for (size_t j = max; j < p.size(); j++)
+		{
+			if (p[j].get_carre().d > p[max].get_carre().d)
+			{
+				max = j;
+			}
+		}
+		if (max != i)
+		{
+			swap(p[i], p[max]);
+		}
+	}
+	return p;
+}
 
 

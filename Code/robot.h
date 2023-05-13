@@ -50,7 +50,7 @@ private:
 	int c_n;
 	bool panne;
 	int k_update;
-	bool colision;
+	bool collision;
 	double d_target;
 	bool alignement = false;
 public:
@@ -59,23 +59,23 @@ public:
 	double get_alpha();
 	int get_c_n();
 	bool get_panne();
-	void set_colision(bool etat);
+	void set_collision(bool etat);
 	int get_k_update();
-	bool get_colision();
-	void move_to(S2d goal, int type, Neutraliseur& neut);
+	bool get_collision();
+	void move_to(S2d goal, int type);
 	void set_type(int a);
-	void aligner_ortho(S2d goal, double d);
+	bool aligner_ortho(S2d goal, double d);
+	void rotation(double alpha_goal);
 	void set_d_target(double d);
 	double get_d_target();
-	void set_alignement(bool align);
-	double get_alignement();
+	void set_alignement(bool a);
+	bool get_alignement();
 };
 
 class Spatial : public Robot
 {
 private:
 	Data donnees;
-	
 public:
 	Spatial(double x, double y, double rayon, int nbU ,int Nr, int Ns, int Nd,
 	 int Np, int Rr, int Rs) : 
@@ -104,7 +104,6 @@ void draw_Robot(Spatial& robot);
 void move_type0(S2d& goal, S2d& centre, double& alpha);
 void move_type1(S2d& goal, S2d& centre, double& alpha, Neutraliseur& neut);
 void move_type2(S2d& goal, S2d& centre, double& alpha);
-void rotation(S2d& goal, S2d& centre, double& alpha, double new_a);
 void converti_angle(double& a);
 
 #endif

@@ -43,6 +43,6 @@
 	
 # données des nbNs robots neutraliseurs en service (un par ligne)
 	0 90 1.5 1 false 0
-	0 100 -0.5 2 false 60
-	-10 80 0 3 false 90
+	-20 120 -0.5 2 false 60
+	10 100 0 3 false 90
 

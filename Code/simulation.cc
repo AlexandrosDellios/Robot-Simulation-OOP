@@ -78,6 +78,7 @@ void simulation::lecture(char* nom_fichier)
 		for(size_t i=0; i < neutraliseurs.size(); i++)
 		{
 			if(neutraliseurs[i].get_panne()) nbNp++;
+			neutraliseurs[i].set_goal(neutraliseurs[i].get_cercle().C);
 		}
 		Spatial spatial(x,y,r_spatial ,nbUpdate, nbNr, nbNs, nbNd, nbNp, nbRr
 						, nbRs);
@@ -137,83 +138,26 @@ void simulation::sauvegarde(string filename)
 
 bool simulation::mise_a_jour()
 {
-	if(sim.get_particules().size()== 0) 
-	{
-		if(sim.get_neutraliseurs().size()==0) return 1;
-		for(size_t i=0; i < sim.get_neutraliseurs().size(); i ++)
-		{
-			Neutraliseur before = sim.get_neutraliseurs()[i];
-			Neutraliseur copie = before;
-			copie.set_goal(sim.get_spatial().get_cercle().C);
-			copie.move_to(copie.get_goal(), 0, copie);
-			sim.update_neutraliseur(copie, i);
-			if(detect_colli(copie, sim.get_neutraliseurs(), sim.get_reparateurs(), sim.get_particules())) sim.update_neutraliseur(before, i);
-		}
-		for(size_t i=0; i < sim.get_reparateurs().size(); i ++)
-		{
-			Reparateur before = sim.get_reparateurs()[i];
-			Reparateur copie = before;
-			copie.set_goal(sim.get_spatial().get_cercle().C);
-			copie.move_to(copie.get_goal());
-			sim.update_reparateur(copie, i);
-			if(detect_colli(copie, sim.get_neutraliseurs(), sim.get_reparateurs(), sim.get_particules())) sim.update_reparateur(before, i);
-		}
-	}
-	else
-	{
-		desintegration();
-		choix_buts();
-		
-		for(size_t i=0; i < sim.get_neutraliseurs().size(); i ++)
-		{
-			Neutraliseur before = sim.get_neutraliseurs()[i];
-			Neutraliseur copie = before;
-			copie.move_to(copie.get_goal(), 0, copie);
-			sim.update_neutraliseur(copie, i);
-			if(detect_colli(copie, sim.get_neutraliseurs(), sim.get_reparateurs(), sim.get_particules())) 
-			{
-				
-				vector<Particule> temp;
-				for(size_t j=0; j < sim.get_particules().size(); ++j)
-				{
-					temp.push_back(sim.get_particules()[j]);
-					if(shape::colli_carre_cercle(temp[j].get_carre(),copie.get_cercle(),false))
-					{
-						before.set_colision(true);
-						before.aligner_ortho(temp[j].get_carre().C, temp[j].get_carre().d);
-						//temp.pop_back();
-					}
-				}
-				sim.update_neutraliseur(before, i);
-				sim.set_particules(temp);
-			}
-
-			
-		}
-		
-		for(size_t i=0; i < sim.get_reparateurs().size(); i ++)
-		{
-			Reparateur before = sim.get_reparateurs()[i];
-			Reparateur copie = before;
-			//copie.move_to(copie.get_goal());
-			sim.update_reparateur(copie, i);
-			if(detect_colli(copie, sim.get_neutraliseurs(), sim.get_reparateurs(), sim.get_particules())) sim.update_reparateur(before, i);
-		}
-	}
+	if((sim.get_particules().size()== 0) 
+		and (sim.get_neutraliseurs().size()==0)) return 1;
+	
+	desintegration();
+	choix_buts_neutraliseurs();
+	choix_buts_reparateurs();
+	move_to_goals();
 	sim.get_spatial().add_update();
 	return 0;
 }
 
-void simulation::choix_buts()
+void simulation::choix_buts_neutraliseurs()
 {
 	vector<Particule> p = tri_particules(sim.get_particules());
 	vector<Neutraliseur> n = sim.get_neutraliseurs();
 	size_t min;
+	for(size_t j=0; j < n.size(); j++) n[j].set_goal(n[j].get_cercle().C);
 	for(size_t i=0; i < p.size(); i++)
 	{
-		if(i > n.size()-1)break;
-		n[i].set_goal(p[i].get_carre().C);
-		n[i].set_d_target(p[i].get_carre().d);
+		if((i+1) > n.size())break;
 		min = i;
 		for(size_t j=min; j < n.size(); j++)
 		{
@@ -223,34 +167,116 @@ void simulation::choix_buts()
 				min = j;
 			}
 		}
-		if(i != min)
-		{
-			n[min].set_goal(p[i].get_carre().C);
-			swap(n[min],n[i]);
-		}
+		n[min].set_goal(p[i].get_carre().C);
+		swap(n[min],n[i]);
 	}
+	
 	for(size_t j=0; j < n.size(); j++) sim.update_neutraliseur(n[j],j);
 }
 
-vector<Particule> simulation::tri_particules(vector<Particule> p)
+void simulation::choix_buts_reparateurs()
 {
-	size_t max;
-	for (size_t i = 0; i < p.size(); i++)
+	vector<Neutraliseur> n = sim.get_neutraliseurs();
+	vector<Reparateur> r = sim.get_reparateurs();
+	size_t min;
+	for(size_t i=0; i < n.size(); i++)
 	{
-		max = i;
-		for (size_t j = max; j < p.size(); j++)
+		if((i+1) > r.size())break;
+		r[i].set_goal(r[i].get_cercle().C);
+		if(!n[i].get_panne()) continue;
+		min = i;
+		for(size_t j=min; j < r.size(); j++)
 		{
-			if (p[j].get_carre().d > p[max].get_carre().d)
+			if(shape::s2d_norm(n[i].get_cercle().C-r[j].get_cercle().C) <=
+				shape::s2d_norm(n[i].get_cercle().C-r[min].get_cercle().C))
+					min = j;
+		}
+		r[min].set_goal(n[i].get_cercle().C);
+		swap(r[min],r[i]);
+	}
+	for(size_t j=0; j < r.size(); j++) sim.update_reparateur(r[j],j);
+}
+
+void simulation::move_to_goals()
+{
+	for(size_t i=0; i < sim.get_neutraliseurs().size(); i ++)
+	{
+		bool alignement = false;
+		Neutraliseur before = sim.get_neutraliseurs()[i];
+		vector<Particule> p = tri_particules(sim.get_particules());
+		before.set_collision(false);
+		Neutraliseur copie = before;
+		copie.move_to(copie.get_goal(), 3);
+		vector<Particule> temp = {};
+		for(size_t j=0; j < p.size(); ++j)
+		{
+			temp.push_back(p[j]);
+			if(shape::colli_carre_cercle(p[j].get_carre()
+				,copie.get_cercle(),false))
 			{
-				max = j;
+				cout << "angle avant update " << before.get_alpha() << endl;
+				cout << i << " en collision avec particule " << j << endl;
+				before.set_collision(true);
+				if(before.aligner_ortho(p[j].get_carre().C,p[j].get_carre().d))
+				{
+					cout << "pop" << endl;
+					temp.pop_back();
+				}
+				cout << "angle apres update " << before.get_alpha() << endl;
+				sim.update_neutraliseur(before, i);
+				alignement = true;
 			}
 		}
-		if (max != i)
+		sim.set_particules(temp);
+		if(alignement) continue;
+		copie = before;
+		copie.move_to(copie.get_goal(), 0);
+		sim.update_neutraliseur(copie, i);
+		if(detect_colli(copie, sim.get_neutraliseurs(), sim.get_reparateurs()
+			, sim.get_particules())) 
 		{
-			swap(p[i], p[max]);
+			before.set_collision(true);
+			sim.update_neutraliseur(before, i);
 		}
 	}
-	return p;
+	
+	for(size_t i=0; i < sim.get_reparateurs().size(); i ++)
+	{
+		Reparateur before = sim.get_reparateurs()[i];
+		Reparateur copie = before;
+		copie.move_to(copie.get_goal());
+		sim.update_reparateur(copie, i);
+		if(detect_colli(copie, sim.get_neutraliseurs(), sim.get_reparateurs()
+			, sim.get_particules())) sim.update_reparateur(before, i);
+	}
+}
+void simulation::move_to_spatial()
+{
+	for(size_t i=0; i < sim.get_neutraliseurs().size(); i ++)
+	{
+		Neutraliseur before = sim.get_neutraliseurs()[i];
+		before.set_collision(false);
+		Neutraliseur copie = before;
+		copie.set_goal(sim.get_spatial().get_cercle().C);
+		copie.move_to(copie.get_goal(), 0);
+		sim.update_neutraliseur(copie, i);
+		if(detect_colli(copie, sim.get_neutraliseurs(), sim.get_reparateurs()
+			, sim.get_particules()))
+		{ 
+			before.set_collision(true);
+			sim.update_neutraliseur(before, i);
+		}
+	}
+	for(size_t i=0; i < sim.get_reparateurs().size(); i ++)
+	{
+		Reparateur before = sim.get_reparateurs()[i];
+		Reparateur copie = before;
+		copie.set_goal(sim.get_spatial().get_cercle().C);
+		copie.move_to(copie.get_goal());
+		sim.update_reparateur(copie, i);
+		if(detect_colli(copie, sim.get_neutraliseurs(), sim.get_reparateurs()
+			, sim.get_particules())) sim.update_reparateur(before, i);
+	}
 }
 
 Data simulation::update_data(int& p)
@@ -297,7 +323,7 @@ bool simulation::detect_colli(Robot robot,vector<Neutraliseur>& neut,vector<Repa
 
 bool simulation::colli_neut(Robot robot,vector<Neutraliseur>& neut)
 {
-	int same (0);
+	bool same (0);
 	for (size_t i(0); i < neut.size(); ++i)
 	{
 		if ((neut[i].get_cercle().C.x != robot.get_cercle().C.x) and 
@@ -318,7 +344,7 @@ bool simulation::colli_neut(Robot robot,vector<Neutraliseur>& neut)
 }
 bool simulation::colli_rep(Robot robot,vector<Reparateur>& rep)
 {
-	int same (0);
+	bool same (0);
 	for (size_t i(0); i<rep.size(); ++i)
 	{
 		if ((rep[i].get_cercle().C.x != robot.get_cercle().C.x) 

@@ -53,8 +53,10 @@ namespace simulation
 	bool colli_rep(Robot robot,vector<Reparateur>& rep);
 	bool colli_parti(Robot robot, vector<Particule>& parti);
 	
-	void choix_buts();
-	vector<Particule> tri_particules(vector<Particule> p);
+	void choix_buts_neutraliseurs();
+	void choix_buts_reparateurs();
+	void move_to_goals();
+	void move_to_spatial();
 }
 
 #endif
