@@ -386,6 +386,19 @@ void converti_angle(double& a)
 	}
 }
 
+void Spatial::update_neutraliseurs(int d, int r, int p)
+{
+	donnees.nbNd += d;
+	donnees.nbNs -= d + r;
+	donnees.nbNr += r;
+	donnees.nbNp += p;
+}
+void Spatial::update_reparateurs(int r)
+{
+	donnees.nbRr += r;
+	donnees.nbRs -= r;
+}
+
 //"getters"
 Cercle Robot::get_cercle(){return cercle;};
 void Spatial::add_update(){donnees.nbUpdate++;};

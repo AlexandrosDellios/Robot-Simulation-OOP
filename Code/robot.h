@@ -84,6 +84,8 @@ public:
 	void add_update();
 	Data get_donnees();
 	Data set_donnees();
+	void update_neutraliseurs(int d, int r, int p);
+	void update_reparateurs(int r);
 };
 
 bool lecture_robot_reparateur(vector<Particule>& particules , string line

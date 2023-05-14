@@ -35,6 +35,8 @@ public :
 	default_random_engine get_e();
 	void set_particules(vector<Particule> p);
 	void update_neutraliseur(Neutraliseur n, int i);
+	void remove_neutraliseur(int i);
+	void remove_reparateur(int i);
 	void update_reparateur(Reparateur r, int i);
 	
 };
@@ -47,16 +49,16 @@ namespace simulation
 	Data update_data(int& p);
 	void draw_all_Robots();
 	void desintegration();
-	bool detect_colli(Robot robot,vector<Neutraliseur>& neut,vector<Reparateur>& rep, 
-														vector<Particule>& parti);
-	bool colli_neut(Robot robot,vector<Neutraliseur>& neut);
-	bool colli_rep(Robot robot,vector<Reparateur>& rep);
-	bool colli_parti(Robot robot, vector<Particule>& parti);
+	bool detect_colli(Robot robot);
+	bool colli_neut(Robot robot);
+	bool colli_rep(Robot robot);
+	bool colli_parti(Robot robot);
 	
 	void choix_buts_neutraliseurs();
 	void choix_buts_reparateurs();
 	void move_to_goals();
 	void move_to_spatial();
+	void ajouter_robots();
 }
 
 #endif
