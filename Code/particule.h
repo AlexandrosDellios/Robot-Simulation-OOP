@@ -20,6 +20,7 @@ private:
 public:
 	Particule(double x, double y, double d) : carre({{x,y},d}){}
 	Carre get_carre();
+	void set_carre_d(double a);
 };
 
 bool lecture_particule(vector<Particule>& particules, string line);

@@ -59,6 +59,7 @@ public:
 	double get_alpha();
 	int get_c_n();
 	bool get_panne();
+	void set_panne(bool new_panne);
 	void set_collision(bool etat);
 	int get_k_update();
 	bool get_collision();

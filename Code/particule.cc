@@ -110,4 +110,5 @@ vector<Particule> tri_particules(vector<Particule> p)
 	return p;
 }
 
+void Particule::set_carre_d(double a){carre.d = a;};
 

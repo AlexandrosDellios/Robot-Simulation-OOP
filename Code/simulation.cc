@@ -377,12 +377,26 @@ void simulation::desintegration(){
 			for (auto i: temp)
 			{
 				updated_particules.push_back(i);
+				bobo_robot(i);
 			}
 		}
 		else updated_particules.push_back(copy_particules[i]);
 	}
 	sim.set_particules(updated_particules);
 }
+
+void simulation::bobo_robot(Particule danger)
+{
+	danger.set_carre_d(danger.get_carre().d*risk_factor);
+	for (auto& i: sim.get_neutraliseurs())
+	{
+		if (shape::colli_carre_cercle(danger.get_carre(), i.get_cercle(), false))
+		{
+			i.set_panne(true);
+		}
+	}
+}
+
 
 bool simulation::detect_colli(Robot robot)
 {

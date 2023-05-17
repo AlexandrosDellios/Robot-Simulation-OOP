@@ -217,25 +217,21 @@ void move_type1(S2d& goal, S2d& centre, double& alpha, Neutraliseur& neut)
 	{
 		goal_ext.x = goal.x+((neut.get_d_target()/2)*risk_factor)+1;
 		goal_ext.y = goal.y;
-		cout<< "droite" <<endl;
 	}
 	else if (centre.x <= goal.x-neut.get_d_target()/2)
 	{
 		goal_ext.x = goal.x-((neut.get_d_target()/2)*risk_factor)-1;
 		goal_ext.y = goal.y;
-		cout<< "gauche" <<endl;
 	}
 	else if(centre.y >= goal.y+neut.get_d_target()/2)
 	{
 		goal_ext.x = goal.x;
 		goal_ext.y = goal.y+((neut.get_d_target()/2)*risk_factor)+1;
-		cout<< "dessus" <<endl;
 	}
 	else if(centre.y <= goal.y-neut.get_d_target()/2)
 	{
 		goal_ext.x = goal.x;
 		goal_ext.y = goal.y-((neut.get_d_target()/2)*risk_factor)-1;
-		cout<< "enbasla" <<endl;
 	}
 	else 
 	{
@@ -278,18 +274,18 @@ bool Neutraliseur::aligner_ortho(S2d goal, double d)
 	{
 		alpha_goal = 0;
 	}	
-	if ((centre.x > (goal.x-(d/2))) and (centre.x < (goal.x+(d/2))) 
+	else if ((centre.x > (goal.x-(d/2))) and (centre.x < (goal.x+(d/2))) 
 	and (centre.y > (goal.y+(d/2))))
 	{
 		alpha_goal = -M_PI/2;
 	}	
 
-	if ((centre.x > (goal.x+(d/2))) and (centre.y < (goal.y+(d/2))) 
+	else if ((centre.x > (goal.x+(d/2))) and (centre.y < (goal.y+(d/2))) 
 	and (centre.y > (goal.y-(d/2))))
 	{
 		alpha_goal = M_PI;
 	}	
-	if ((centre.x > (goal.x-(d/2))) and (centre.x < (goal.x+(d/2))) 
+	else if ((centre.x > (goal.x-(d/2))) and (centre.x < (goal.x+(d/2))) 
 	and (centre.y < (goal.y-(d/2))))
 	{
 		alpha_goal = M_PI/2;
@@ -306,59 +302,6 @@ bool Neutraliseur::aligner_ortho(S2d goal, double d)
 	}
 	return false;
 }
-/*
-bool Neutraliseur::aligner_ortho(S2d goal, double d)
-{
-	S2d centre(cercle.C);
-	double alpha_goal = alpha;
-	double dx = centre.x - goal.x;
-	double dy = centre.y -goal.y;
-	if (dx > 0)
-	{
-		if(dy > 0)
-		{
-			if(abs(dy) > abs(dx)) alpha_goal = M_PI * (-1./2.);
-			else if(abs(dx) > abs(dy)) alpha_goal = -M_PI;
-			else alpha_goal = M_PI * (-3./4.);
-		}
-		else if(dy < 0)
-		{
-			if(abs(dy) > abs(dx)) alpha_goal = M_PI * 1./2.;
-			else if(abs(dx) > abs(dy)) alpha_goal = M_PI;
-			else alpha_goal = M_PI * 3./4.;
-		}
-		else alpha_goal = M_PI;
-	}
-	else if (dx < 0)
-	{
-		if(dy > 0)
-		{
-			if(abs(dy) > abs(dx)) alpha_goal = M_PI * (-1./2.);
-			else if(abs(dx) > abs(dy)) alpha_goal = 0;
-			else alpha_goal = M_PI * (-1./4.);
-		}
-		else if(dy < 0)
-		{
-			if(abs(dy) > abs(dx)) alpha_goal = M_PI * 1./2.;
-			else if(abs(dx) > abs(dy)) alpha_goal = 0;
-			else alpha_goal = M_PI * 1./4.;
-		}
-		else alpha_goal = 0;
-	}
-	else
-	{
-		if(dy > 0) alpha_goal = M_PI * (-1./2.);
-		else alpha_goal = M_PI * 1./2.;
-	}
-
-	rotation(alpha_goal);
-	if ((alpha < (alpha_goal + epsil_alignement)) and (alpha > (alpha_goal- epsil_alignement)))
-	{
-		return true;
-	}
-	return false;
-}
-*/
 
 void Neutraliseur::rotation(double alpha_goal)
 {
@@ -416,3 +359,4 @@ void Neutraliseur::set_d_target(double d){d_target=d;};
 double Neutraliseur::get_d_target(){return d_target;};
 void Neutraliseur::set_alignement(bool a){alignement=a;};
 bool Neutraliseur::get_alignement(){return alignement;};
+void Neutraliseur::set_panne(bool new_panne){panne = new_panne;};
