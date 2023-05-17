@@ -1,0 +1,24 @@
+# test3.txt
+#
+# nombre de particules puis les données d'une particule par ligne
+9
+   -102.562 97.4375 4.625
+   -106.282 93.7188 2.0625
+   -108.594 91.4062 2.0625
+   -106.282 91.4062 2.0625
+   -108.594 93.7188 2.0625
+   -108.594 98.5938 2.0625
+   -106.282 98.5938 2.0625
+   -108.594 96.2812 2.0625
+   -106.282 96.2812 2.0625
+
+# données du robot spatial
+5 5 790 1 3 2 3 1
+
+# données des nbRs robots réparateurs en service (un par ligne)
+   -44.1942 64.8502 
+
+# données des nbNs robots neutraliseurs en service (un par ligne) 
+   -98.9335 104.303 -2.8578 1 false 123
+   -104.546 85.4727 1.59406 2 true 761
+   -95.3328 93.6963 3.17284 3 false 123

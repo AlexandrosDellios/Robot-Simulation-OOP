@@ -138,6 +138,8 @@ void simulation::sauvegarde(string filename)
 
 bool simulation::mise_a_jour()
 {
+	cout << "données : \nParticules : " << sim.get_particules().size() << ", Robots neut : " << sim.get_neutraliseurs().size() 
+		<< ", Robots rep : " << sim.get_reparateurs().size() << endl;
 	if(sim.get_particules().size()== 0)
 	{
 		if((sim.get_neutraliseurs().size()==0) 
@@ -236,13 +238,13 @@ void simulation::choix_buts_reparateurs()
 {
 	vector<Neutraliseur> n = sim.get_neutraliseurs();
 	vector<Reparateur> r = sim.get_reparateurs();
-	size_t min;
+	for(size_t i=0; i < r.size(); i++) r[i].set_goal(r[i].get_cercle().C);
+	size_t min, k = 0;
 	for(size_t i=0; i < n.size(); i++)
 	{
-		if((i+1) > r.size())break;
-		r[i].set_goal(r[i].get_cercle().C);
+		if((k+1) > r.size())break;
 		if(!n[i].get_panne()) continue;
-		min = i;
+		min = k;
 		for(size_t j=min; j < r.size(); j++)
 		{
 			if(shape::s2d_norm(n[i].get_cercle().C-r[j].get_cercle().C) <=
@@ -250,11 +252,12 @@ void simulation::choix_buts_reparateurs()
 					min = j;
 		}
 		r[min].set_goal(n[i].get_cercle().C);
-		swap(r[min],r[i]);
+		swap(r[min],r[k]);
+		k++;
 	}
-	for(size_t i=0; i < r.size(); i++)
+	for(size_t i=0; i < sim.get_reparateurs().size(); i++)
 	{
-		if(i*3 >= n.size()) 
+		if(i*3 >= sim.get_neutraliseurs().size()) 
 		{
 			r[i].set_goal(sim.get_spatial().get_cercle().C);
 			Cercle centre = {r[i].get_cercle().C, 0};
@@ -275,6 +278,13 @@ void simulation::move_to_goals()
 {
 	for(size_t i=0; i < sim.get_neutraliseurs().size(); i ++)
 	{
+		if((colli_rep(sim.get_neutraliseurs()[i])) and (sim.get_neutraliseurs()[i].get_panne()))
+		{ 
+			Neutraliseur n = sim.get_neutraliseurs()[i];
+			sim.get_spatial().update_neutraliseurs(0,0,-1);
+			n.set_panne(false);
+			sim.update_neutraliseur(n,i);
+		}
 		if(sim.get_neutraliseurs()[i].get_panne()) continue;
 		bool alignement = false;
 		Neutraliseur before = sim.get_neutraliseurs()[i];
@@ -325,6 +335,13 @@ void simulation::move_to_spatial()
 {
 	for(size_t i=0; i < sim.get_neutraliseurs().size(); i++)
 	{
+		if(colli_rep(sim.get_neutraliseurs()[i]))
+		{ 
+			Neutraliseur n = sim.get_neutraliseurs()[i];
+			sim.get_spatial().update_neutraliseurs(0,0,-1);
+			n.set_panne(false);
+			sim.update_neutraliseur(n,i);
+		}
 		if(sim.get_neutraliseurs()[i].get_panne()) continue;
 		Neutraliseur before = sim.get_neutraliseurs()[i];
 		before.set_collision(false);
