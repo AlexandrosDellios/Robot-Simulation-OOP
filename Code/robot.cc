@@ -210,37 +210,38 @@ void move_type0(S2d& goal, S2d& centre, double& alpha)
 
 void move_type1(S2d& goal, S2d& centre, double& alpha, Neutraliseur& neut)
 {
-	S2d goal_ext;
-	if (centre.x >= goal.x+neut.get_d_target()/2)
+	S2d goal_ext({0,0});
+	if (centre.x == goal.x)	goal_ext = goal;
+	else if (centre.y == goal.y) goal_ext = goal;
+	else if (centre.x >= goal.x+neut.get_d_target()/2)
 	{
 		goal_ext.x = goal.x+((neut.get_d_target()/2)*risk_factor)+1;
 		goal_ext.y = goal.y;
+		cout<< "droite" <<endl;
 	}
-	if (centre.x <= goal.x-neut.get_d_target()/2)
+	else if (centre.x <= goal.x-neut.get_d_target()/2)
 	{
 		goal_ext.x = goal.x-((neut.get_d_target()/2)*risk_factor)-1;
 		goal_ext.y = goal.y;
+		cout<< "gauche" <<endl;
 	}
-	if ((centre.x <= goal.x+neut.get_d_target()/2) 
-	and (centre.x >= goal.x-neut.get_d_target()/2) 
-	and (centre.y >= goal.y+neut.get_d_target()/2))
+	else if(centre.y >= goal.y+neut.get_d_target()/2)
 	{
 		goal_ext.x = goal.x;
 		goal_ext.y = goal.y+((neut.get_d_target()/2)*risk_factor)+1;
+		cout<< "dessus" <<endl;
 	}
-	if ((centre.x <= goal.x+neut.get_d_target()/2) 
-	and (centre.x >= goal.x-neut.get_d_target()/2) 
-	and (centre.y <= goal.y-neut.get_d_target()/2))
+	else if(centre.y <= goal.y-neut.get_d_target()/2)
 	{
 		goal_ext.x = goal.x;
 		goal_ext.y = goal.y-((neut.get_d_target()/2)*risk_factor)-1;
+		cout<< "enbasla" <<endl;
+	}
+	else 
+	{
+		goal_ext = goal;
 	}
 	move_type0(goal_ext, centre, alpha); //goal_ext determine
-	if ((centre.x == goal_ext.x) and (centre.y == goal_ext.y))
-	{
-		neut.aligner_ortho(goal, neut.get_d_target());
-	}
-	move_type0(goal, centre, alpha);
 }
 
 void move_type2(S2d& goal, S2d& centre, double& alpha)
@@ -248,64 +249,64 @@ void move_type2(S2d& goal, S2d& centre, double& alpha)
 	S2d init_pos_to_goal = {goal.x -  centre.x, goal.y - centre.y};
 	S2d travel_dir = {cos(alpha),sin(alpha)};
 	double proj_goal = shape::s2d_prod_scal(init_pos_to_goal, travel_dir);
-	
-	if(abs(proj_goal) > vtran_max)
-	{
-		proj_goal = ((proj_goal > 0) ? 1: -1)*vtran_max;
-	}
-	shape::s2d_add_scaled_vector(centre, travel_dir,proj_goal);
-	
 	S2d updated_pos_to_goal = {goal.x - centre.x, goal.y - centre.y};
 	double goal_a(atan2(updated_pos_to_goal.y, updated_pos_to_goal.x));
 	double delta_a(goal_a - alpha);
 	
-	if(abs(delta_a) <= vrot_max) alpha = goal_a;
-	else alpha += ((delta_a > 0) ? 1. : -1)*vrot_max;
+	if (abs(delta_a) < M_PI/3)
+	{
+		if(abs(proj_goal) > vtran_max*delta_t)
+		{
+			proj_goal = ((proj_goal > 0) ? 1: -1)*vtran_max*delta_t;
+		}
+		shape::s2d_add_scaled_vector(centre, travel_dir,proj_goal);
+	}
+	updated_pos_to_goal = {goal.x - centre.x, goal.y - centre.y};
+	goal_a = atan2(updated_pos_to_goal.y, updated_pos_to_goal.x);
+	delta_a = goal_a - alpha;
+	converti_angle(delta_a);
+	if(abs(delta_a) <= vrot_max*delta_t) alpha = goal_a;
+	else alpha += ((delta_a > 0) ? 1. : -1)*vrot_max*delta_t;
 }
-/*
+
 bool Neutraliseur::aligner_ortho(S2d goal, double d)
 {
 	S2d centre(cercle.C);
-	if ((centre.x < (goal.x-(d/2))) and (centre.y < (goal.y+(d/2))) and (centre.y > (goal.y-(d/2))))
+	double alpha_goal(0);
+	if ((centre.x < (goal.x-(d/2))) and (centre.y < (goal.y+(d/2))) 
+	and (centre.y > (goal.y-(d/2))))
 	{
-		alpha = 0;
-		if ((alpha > 0-epsil_alignement) and (alpha < 0+epsil_alignement))
-		{
-			return true;
-		}
+		alpha_goal = 0;
 	}	
-	if ((centre.x > (goal.x-(d/2))) and (centre.x < (goal.x+(d/2))) and (centre.y > (goal.y+(d/2))))
+	if ((centre.x > (goal.x-(d/2))) and (centre.x < (goal.x+(d/2))) 
+	and (centre.y > (goal.y+(d/2))))
 	{
-		alpha = -M_PI/2;
-		//rotation(goal,centre,alpha,-M_PI/2);
-		if ((alpha > (-M_PI/2)-epsil_alignement) and (alpha < (-M_PI/2)+epsil_alignement))
-		{
-			return true;
-		}
+		alpha_goal = -M_PI/2;
 	}	
 
 	if ((centre.x > (goal.x+(d/2))) and (centre.y < (goal.y+(d/2))) 
 	and (centre.y > (goal.y-(d/2))))
 	{
-		alpha = M_PI;
-		//rotation(goal,centre,alpha, M_PI);
-		if ((alpha > M_PI-epsil_alignement) and (alpha < M_PI+epsil_alignement))
-		{
-			return true;
-		}
+		alpha_goal = M_PI;
 	}	
-	if ((centre.x > (goal.x-(d/2))) and (centre.x < (goal.x+(d/2))) and (centre.y < (goal.y-(d/2))))
+	if ((centre.x > (goal.x-(d/2))) and (centre.x < (goal.x+(d/2))) 
+	and (centre.y < (goal.y-(d/2))))
 	{
-		alpha = M_PI/2;
-		//rotation(goal,centre,alpha,M_PI/2);
-		if ((alpha > (M_PI/2)-epsil_alignement) and (alpha < (M_PI/2)+epsil_alignement))
-		{
-			return true;
-		}
+		alpha_goal = M_PI/2;
+	}
+	else 
+	{
+		S2d updated_pos_to_goal = {goal.x - centre.x, goal.y - centre.y};
+		alpha_goal = atan2(updated_pos_to_goal.y, updated_pos_to_goal.x);
+	}
+	rotation(alpha_goal);
+	if ((alpha < (alpha_goal + epsil_alignement)) and (alpha > (alpha_goal- epsil_alignement)))
+	{
+		return true;
 	}
 	return false;
-}*/
-
+}
+/*
 bool Neutraliseur::aligner_ortho(S2d goal, double d)
 {
 	S2d centre(cercle.C);
@@ -357,6 +358,7 @@ bool Neutraliseur::aligner_ortho(S2d goal, double d)
 	}
 	return false;
 }
+*/
 
 void Neutraliseur::rotation(double alpha_goal)
 {

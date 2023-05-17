@@ -144,11 +144,14 @@ bool simulation::mise_a_jour()
 			and (sim.get_reparateurs().size()==0)) return 1;
 		move_to_spatial();
 	}
-	ajouter_robots();
-	desintegration();
-	choix_buts_neutraliseurs();
-	choix_buts_reparateurs();
-	move_to_goals();
+	else
+	{
+		ajouter_robots();
+		desintegration();
+		choix_buts_neutraliseurs();
+		choix_buts_reparateurs();
+		move_to_goals();
+	}
 	sim.get_spatial().add_update();
 	return 0;
 }
@@ -285,7 +288,7 @@ void simulation::move_to_goals()
 		sim.set_particules(temp);
 		if(alignement) continue;
 		copie = before;
-		copie.move_to(copie.get_goal(), 0);
+		copie.move_to(copie.get_goal(), 2);
 		sim.update_neutraliseur(copie, i);
 		if(detect_colli(copie)) 
 		{
