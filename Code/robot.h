@@ -49,7 +49,7 @@ private:
 	double alpha;
 	int c_n;
 	bool panne;
-	int k_update;
+	unsigned int k_update;
 	bool collision;
 	double d_target;
 	bool alignement = false;
