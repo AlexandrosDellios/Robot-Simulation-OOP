@@ -60,6 +60,7 @@ namespace simulation
 	void move_to_spatial();
 	void ajouter_robots();
 	void bobo_robot(Particule danger);
+	void destroy_robot();
 }
 
 #endif

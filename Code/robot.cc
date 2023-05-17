@@ -167,10 +167,11 @@ void Neutraliseur::move_to(S2d goal, int type)
 		case 2:
 			move_type2(goal,cercle.C, alpha);
 		break;
-		case 3:
+		case 5:
 			shape::s2d_add_scaled_vector(cercle.C, travel_dir,vtran_max*delta_t);	
 		break;
 		default:
+			move_type0(goal, cercle.C, alpha);
 		break;
 	}
 }
@@ -245,7 +246,7 @@ void move_type2(S2d& goal, S2d& centre, double& alpha)
 	S2d init_pos_to_goal = {goal.x -  centre.x, goal.y - centre.y};
 	S2d travel_dir = {cos(alpha),sin(alpha)};
 	double proj_goal = shape::s2d_prod_scal(init_pos_to_goal, travel_dir);
-	S2d updated_pos_to_goal = {goal.x - centre.x, goal.y - centre.y};
+	S2d updated_pos_to_goal = goal - centre;
 	double goal_a(atan2(updated_pos_to_goal.y, updated_pos_to_goal.x));
 	double delta_a(goal_a - alpha);
 	
@@ -305,7 +306,6 @@ bool Neutraliseur::aligner_ortho(S2d goal, double d)
 
 void Neutraliseur::rotation(double alpha_goal)
 {
-	cout << "goal " << alpha_goal << " angle actuel " << alpha << endl;
 	double delta_a(alpha_goal - alpha);
 	if(abs(delta_a) <= vrot_max*delta_t) alpha = alpha_goal;
 	else if (delta_a > 0)
@@ -316,7 +316,6 @@ void Neutraliseur::rotation(double alpha_goal)
 	{
 		alpha -= vrot_max*delta_t;
 	}
-	cout << "nouvel angle " << alpha << endl;
 }
 
 void converti_angle(double& a)

@@ -215,6 +215,8 @@ void Fenetre::on_file_dialog_response(int response_id,
 			simulation::lecture(&(filename[0]));
 			m_area.draw();
 			update_infos();
+			Button_Start.set_sensitive(true);
+			Button_Step.set_sensitive(true);
 			break;
 		}
 		case Gtk::ResponseType::CANCEL:
@@ -301,7 +303,8 @@ bool Fenetre::on_timeout()
 	if(simulation::mise_a_jour())
 	{
 		Button_Start.set_label("start");
-		Button_Step.set_sensitive(true);
+		Button_Start.set_sensitive(false);
+		Button_Step.set_sensitive(false);
 		delete_timer();
 		return true;
 	}
