@@ -352,6 +352,7 @@ int Neutraliseur::get_c_n(){return c_n;};
 bool Neutraliseur::get_panne(){return panne;};
 void Neutraliseur::set_collision(bool etat){collision = etat;};
 int Neutraliseur::get_k_update(){return k_update;};
+void Neutraliseur::set_k_update(int k) {k_update = k;};
 void Neutraliseur::set_type(int a){c_n = a;};
 bool Neutraliseur::get_collision(){return collision;};
 void Neutraliseur::set_d_target(double d){d_target=d;};

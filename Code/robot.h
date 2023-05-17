@@ -62,6 +62,7 @@ public:
 	void set_panne(bool new_panne);
 	void set_collision(bool etat);
 	int get_k_update();
+	void set_k_update(int k);
 	bool get_collision();
 	void move_to(S2d goal, int type);
 	void set_type(int a);

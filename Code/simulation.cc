@@ -409,6 +409,8 @@ void simulation::bobo_robot(Particule danger)
 		if (shape::colli_carre_cercle(danger.get_carre(), i.get_cercle(), false))
 		{
 			i.set_panne(true);
+			sim.get_spatial().update_neutraliseurs(0,0,1);
+			i.set_k_update(sim.get_spatial().get_donnees().nbUpdate+1);
 		}
 	}
 }
