@@ -32,5 +32,6 @@ namespace shape
 }
 
 S2d operator- (S2d p1, S2d p2);
+bool operator == (S2d p1, S2d p2);
 
 #endif

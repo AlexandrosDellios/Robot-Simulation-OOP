@@ -147,7 +147,7 @@ void draw_Robot(Spatial& robot)
 
 void Reparateur::move_to(S2d goal)
 {
-	S2d pos_to_goal = {goal.x - cercle.C.x, goal.y - cercle.C.y};
+	S2d pos_to_goal = goal - cercle.C;
 	double norm(shape::s2d_norm(pos_to_goal));
 	if (norm <= vtran_max) cercle.C = goal;
 	else shape::s2d_add_scaled_vector(cercle.C, pos_to_goal, vtran_max/norm*delta_t);
@@ -168,7 +168,7 @@ void Neutraliseur::move_to(S2d goal, int type)
 			move_type2(goal,cercle.C, alpha);
 		break;
 		case 5:
-			shape::s2d_add_scaled_vector(cercle.C, travel_dir,vtran_max*delta_t);	
+			shape::s2d_add_scaled_vector(cercle.C, travel_dir,delta_t);	
 		break;
 		default:
 			move_type0(goal, cercle.C, alpha);
@@ -178,7 +178,7 @@ void Neutraliseur::move_to(S2d goal, int type)
 
 void move_type0(S2d& goal, S2d& centre, double& alpha)
 {
-	S2d updated_pos_to_goal = {goal.x - centre.x, goal.y - centre.y};
+	S2d updated_pos_to_goal = goal - centre;
 	double goal_a(atan2(updated_pos_to_goal.y, updated_pos_to_goal.x));
 	if (goal_a != alpha)
 	{
@@ -243,7 +243,7 @@ void move_type1(S2d& goal, S2d& centre, double& alpha, Neutraliseur& neut)
 
 void move_type2(S2d& goal, S2d& centre, double& alpha)
 {
-	S2d init_pos_to_goal = {goal.x -  centre.x, goal.y - centre.y};
+	S2d init_pos_to_goal = goal - centre;
 	S2d travel_dir = {cos(alpha),sin(alpha)};
 	double proj_goal = shape::s2d_prod_scal(init_pos_to_goal, travel_dir);
 	S2d updated_pos_to_goal = goal - centre;
@@ -293,7 +293,7 @@ bool Neutraliseur::aligner_ortho(S2d goal, double d)
 	}
 	else 
 	{
-		S2d updated_pos_to_goal = {goal.x - centre.x, goal.y - centre.y};
+		S2d updated_pos_to_goal = goal - centre;
 		alpha_goal = atan2(updated_pos_to_goal.y, updated_pos_to_goal.x);
 	}
 	rotation(alpha_goal);
@@ -357,6 +357,4 @@ void Neutraliseur::set_type(int a){c_n = a;};
 bool Neutraliseur::get_collision(){return collision;};
 void Neutraliseur::set_d_target(double d){d_target=d;};
 double Neutraliseur::get_d_target(){return d_target;};
-void Neutraliseur::set_alignement(bool a){alignement=a;};
-bool Neutraliseur::get_alignement(){return alignement;};
 void Neutraliseur::set_panne(bool new_panne){panne = new_panne;};

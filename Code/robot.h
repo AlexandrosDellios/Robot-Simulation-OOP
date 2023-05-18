@@ -52,7 +52,6 @@ private:
 	unsigned int k_update;
 	bool collision;
 	double d_target;
-	bool alignement = false;
 public:
 	Neutraliseur(double x, double y, double r, double a, int c,bool p, int k): 
 		Robot(x,y,r), alpha(a), c_n(c), panne(p),k_update(k){};
@@ -70,8 +69,6 @@ public:
 	void rotation(double alpha_goal);
 	void set_d_target(double d);
 	double get_d_target();
-	void set_alignement(bool a);
-	bool get_alignement();
 };
 
 class Spatial : public Robot

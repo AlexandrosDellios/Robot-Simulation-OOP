@@ -100,3 +100,9 @@ S2d operator -(S2d p1, S2d p2)
 	temp.y = p1.y - p2.y;
 	return temp;
 }
+
+bool operator == (S2d p1, S2d p2)
+{
+	if((p1.x == p2.x) and (p1.y == p2.y)) return true;
+	return false;
+}

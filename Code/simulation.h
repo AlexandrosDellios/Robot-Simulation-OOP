@@ -16,28 +16,38 @@
 class Simulation
 {
 private :
-	vector<Particule> particules;
+	vector<Particule> parti;
 	Spatial spatial;
-	vector<Reparateur> reparateurs;
-	vector<Neutraliseur> neutraliseurs;
+	vector<Reparateur> rep;
+	vector<Neutraliseur> neut;
 	string filename;
 	
 public :
 	Simulation(vector<Particule> p, Spatial s, vector<Reparateur> r
 				, vector<Neutraliseur> n, string f) :
-		particules(p), spatial(s), reparateurs(r),neutraliseurs(n),filename(f){}
+		parti(p), spatial(s), rep(r),neut(n),filename(f){}
 	
-	vector<Particule>& get_particules(){return particules;};
+	vector<Particule>& get_particules(){return parti;};
 	Spatial& get_spatial(){return spatial;};
-	vector<Reparateur>& get_reparateurs(){return reparateurs;};
-	vector<Neutraliseur>& get_neutraliseurs(){return neutraliseurs;};
+	vector<Reparateur>& get_reparateurs(){return rep;};
+	vector<Neutraliseur>& get_neutraliseurs(){return neut;};
 	string get_filename(){return filename;};
 	default_random_engine get_e();
-	void set_particules(vector<Particule> p);
-	void update_neutraliseur(Neutraliseur n, int i);
-	void remove_neutraliseur(int i);
-	void remove_reparateur(int i);
-	void update_reparateur(Reparateur r, int i);
+	
+	void desintegration();
+	bool detect_colli(Robot robot);
+	bool colli_neut(Robot robot);
+	bool colli_rep(Robot robot);
+	bool colli_parti(Robot robot);
+	
+	void choix_buts_neutraliseurs();
+	void choix_buts_reparateurs();
+	void move_neutraliseurs();
+	void move_reparateurs();
+	
+	void ajouter_robots();
+	void bobo_robot(Particule danger);
+	void destroy_robot();
 	
 };
 
@@ -48,19 +58,6 @@ namespace simulation
 	bool mise_a_jour();
 	Data update_data(int& p);
 	void draw_all_Robots();
-	void desintegration();
-	bool detect_colli(Robot robot);
-	bool colli_neut(Robot robot);
-	bool colli_rep(Robot robot);
-	bool colli_parti(Robot robot);
-	
-	void choix_buts_neutraliseurs();
-	void choix_buts_reparateurs();
-	void move_to_goals();
-	void move_to_spatial();
-	void ajouter_robots();
-	void bobo_robot(Particule danger);
-	void destroy_robot();
 }
 
 #endif
