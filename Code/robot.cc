@@ -307,6 +307,7 @@ bool Neutraliseur::aligner_ortho(S2d goal, double d)
 void Neutraliseur::rotation(double alpha_goal)
 {
 	double delta_a(alpha_goal - alpha);
+	converti_angle(delta_a);
 	if(abs(delta_a) <= vrot_max*delta_t) alpha = alpha_goal;
 	else if (delta_a > 0)
 	{
