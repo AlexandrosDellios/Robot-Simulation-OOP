@@ -167,7 +167,7 @@ void Neutraliseur::move_to(S2d goal, int type)
 		case 2:
 			move_type2(goal,cercle.C, alpha);
 		break;
-		case 5:
+		case 5: //rapprochement collision
 			shape::s2d_add_scaled_vector(cercle.C, travel_dir,delta_t);	
 		break;
 		default:
@@ -214,22 +214,22 @@ void move_type1(S2d& goal, S2d& centre, double& alpha, Neutraliseur& neut)
 	S2d goal_ext({0,0});
 	if (centre.x == goal.x)	goal_ext = goal;
 	else if (centre.y == goal.y) goal_ext = goal;
-	else if (centre.x >= goal.x+neut.get_d_target()/2)
+	else if (centre.x >= (goal.x+((neut.get_d_target()/2)*risk_factor)))
 	{
 		goal_ext.x = goal.x+((neut.get_d_target()/2)*risk_factor)+1;
 		goal_ext.y = goal.y;
 	}
-	else if (centre.x <= goal.x-neut.get_d_target()/2)
+	else if (centre.x <= (goal.x-((neut.get_d_target()/2)*risk_factor)))
 	{
 		goal_ext.x = goal.x-((neut.get_d_target()/2)*risk_factor)-1;
 		goal_ext.y = goal.y;
 	}
-	else if(centre.y >= goal.y+neut.get_d_target()/2)
+	else if(centre.y >= (goal.y+((neut.get_d_target()/2)*risk_factor)))
 	{
 		goal_ext.x = goal.x;
 		goal_ext.y = goal.y+((neut.get_d_target()/2)*risk_factor)+1;
 	}
-	else if(centre.y <= goal.y-neut.get_d_target()/2)
+	else if(centre.y <= (goal.y-((neut.get_d_target()/2)*risk_factor)))
 	{
 		goal_ext.x = goal.x;
 		goal_ext.y = goal.y-((neut.get_d_target()/2)*risk_factor)-1;
@@ -350,6 +350,7 @@ void Spatial::add_update(){donnees.nbUpdate++;};
 Data Spatial::get_donnees(){return donnees;};
 double Neutraliseur::get_alpha(){return alpha;};
 int Neutraliseur::get_c_n(){return c_n;};
+void Neutraliseur::set_c_n(int n){c_n = n;};
 bool Neutraliseur::get_panne(){return panne;};
 void Neutraliseur::set_collision(bool etat){collision = etat;};
 int Neutraliseur::get_k_update(){return k_update;};

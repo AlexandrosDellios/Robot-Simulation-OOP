@@ -46,7 +46,7 @@ robots neutraliseurs en réserve:"),
 	
 	timer_added(false),// to handle a single timer
 	disconnect(false), // to handle a single timer
-	timeout_value(10) // 10 ms
+	timeout_value(8) // 125 ms
 {
 	set_title("Propre en Ordre");
 	set_resizable(true);

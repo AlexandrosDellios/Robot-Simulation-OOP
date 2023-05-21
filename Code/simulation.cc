@@ -192,7 +192,7 @@ void Simulation::ajouter_robots()
 		if(detect_colli(n)) neut.pop_back();
 		else spatial.update_neutraliseurs(0,-1,0);
 	}
-	if((neut.size() > size_t(3* d.nbRs)) and (d.nbRr > 0)) 
+	if((d.nbNp > d.nbRs) and (d.nbRr > 0)) 
 	{
 		Reparateur r(centre.x, centre.y,r_reparateur);
 		rep.push_back(r);
@@ -212,33 +212,36 @@ void Simulation::choix_buts_neutraliseurs()
 		for(size_t j=min; j < neut.size(); j++)
 		{
 			S2d distance_min = p[i].get_carre().C-neut[min].get_cercle().C;
-			double time_min = shape::s2d_norm(distance_min) * vtran_max 
-				+ abs(atan2(distance_min.y, distance_min.x) 
-					- neut[min].get_alpha()) * vrot_max;
+			double angle_min = atan2(distance_min.y, distance_min.x);
+			double time_min = shape::s2d_norm(distance_min) / vtran_max 
+				+ abs(angle_min- neut[min].get_alpha()) / vrot_max;
+				
 			S2d distance = p[i].get_carre().C-neut[j].get_cercle().C;
-			double time = shape::s2d_norm(distance) * vtran_max 
-				+ abs(atan2(distance.y, distance.x) 
-					- neut[i].get_alpha()) * vrot_max;
+			double angle = atan2(distance.y, distance.x);
+			double time = shape::s2d_norm(distance) / vtran_max 
+				+ abs(angle - neut[j].get_alpha()) / vrot_max;
 			
 			if(time  < time_min) min = j;
 		}
 		neut[min].set_goal(p[i].get_carre().C);
+		neut[min].set_d_target(p[i].get_carre().d);
 		swap(neut[min],neut[i]);
 	}
 	for(size_t i = p.size() ; i < neut.size(); i++)
 	{
+		neut[i].set_c_n(0);
 		neut[i].set_goal(spatial.get_cercle().C);
 	}
 }
 
 void Simulation::choix_buts_reparateurs()
 {
-	for(size_t i=0; i < rep.size(); i++) rep[i].set_goal(rep[i].get_cercle().C);
+	for(size_t i=0; i < rep.size(); i++)rep[i].set_goal(spatial.get_cercle().C);
 	size_t min, k = 0;
 	for(size_t i=0; i < neut.size(); i++)
 	{
 		if((k+1) > rep.size())break;
-		if(!neut[i].get_panne()) continue;
+		if(!neut[i].get_panne())continue;
 		min = k;
 		for(size_t j=min; j < rep.size(); j++)
 		{
@@ -249,19 +252,11 @@ void Simulation::choix_buts_reparateurs()
 		double distance = shape::s2d_norm(neut[i].get_cercle().C
 			- rep[min].get_cercle().C);
 		double max_distance = (max_update - (spatial.get_donnees().nbUpdate 
-			- neut[i].get_k_update()))*vtran_max;
+			- neut[i].get_k_update()))*vtran_max*delta_t;
 		if(distance > max_distance) continue;
 		rep[min].set_goal(neut[i].get_cercle().C);
 		swap(rep[min],rep[k]);
 		k++;
-	}
-	Data d = spatial.get_donnees();
-	for(size_t i=0; i < rep.size(); i++)
-	{
-		if((i*3 >= size_t(d.nbNs)) or(!parti.size() and !d.nbNp))
-		{
-			rep[i].set_goal(spatial.get_cercle().C);
-		}
 	}
 }
 
@@ -378,8 +373,8 @@ void Simulation::bobo_robot(Particule danger)
 	danger.set_carre_d(danger.get_carre().d*risk_factor);
 	for(size_t i=0; i < neut.size(); i++)
 	{
-		if(shape::colli_carre_cercle(danger.get_carre(),neut[i].get_cercle()
-			,false))
+		if((shape::colli_carre_cercle(danger.get_carre(),neut[i].get_cercle()
+			,false)) and (!neut[i].get_panne()))
 		{
 			neut[i].set_panne(true);
 			spatial.update_neutraliseurs(0,0,1);

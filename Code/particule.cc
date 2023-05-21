@@ -33,12 +33,12 @@ bool lecture_particule(vector<Particule>& particules, string line)
 bool verification_particule(vector<Particule>& particules, Particule p)
 {
 	Carre c = p.get_carre();
-	if(c.d <= d_particule_min)
+	if(c.d < d_particule_min)
 	{
 		cout << message::particle_too_small(c.C.x,c.C.y,c.d);
 		return 1;
 	}
-	for (size_t i(0); i<particules.size(); ++i)
+	for (size_t i(0); i < particules.size(); ++i)
 	{
 		Carre c2 = particules[i].get_carre();
 		if (shape::colli_carre(c,c2,true))
@@ -71,7 +71,7 @@ vector<Particule> desintegration_particule(Particule particule)
 {
 	vector<Particule> temp;
 	Carre c = particule.get_carre();
-	if(((c.d)/2)-2*shape::epsil_zero > d_particule_min + shape::epsil_zero)
+	if(((c.d)/2)-2*shape::epsil_zero >= d_particule_min + shape::epsil_zero)
 	{
 		Particule c1 (c.C.x-((c.d)/4), c.C.y+((c.d)/4)
 						, ((c.d)/2)-2*shape::epsil_zero);

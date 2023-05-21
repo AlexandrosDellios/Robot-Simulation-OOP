@@ -57,6 +57,7 @@ public:
 		Robot(x,y,r), alpha(a), c_n(c), panne(p),k_update(k){};
 	double get_alpha();
 	int get_c_n();
+	void set_c_n(int n);
 	bool get_panne();
 	void set_panne(bool new_panne);
 	void set_collision(bool etat);
