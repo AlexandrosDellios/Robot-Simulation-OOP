@@ -297,7 +297,8 @@ bool Neutraliseur::aligner_ortho(S2d goal, double d)
 		alpha_goal = atan2(updated_pos_to_goal.y, updated_pos_to_goal.x);
 	}
 	rotation(alpha_goal);
-	if ((alpha < (alpha_goal + epsil_alignement)) and (alpha > (alpha_goal- epsil_alignement)))
+	if ((alpha < (alpha_goal + epsil_alignement)) 
+	and (alpha > (alpha_goal- epsil_alignement)))
 	{
 		return true;
 	}
@@ -321,14 +322,8 @@ void Neutraliseur::rotation(double alpha_goal)
 
 void converti_angle(double& a)
 {
-	if(a>M_PI)
-	{
-		a=-M_PI+(a-M_PI);
-	}
-	if (a<-M_PI)
-	{
-		a=M_PI+(M_PI+a);
-	}
+	if(a>M_PI)	a=-M_PI+(a-M_PI);
+	if (a<-M_PI)	a=M_PI+(M_PI+a);
 }
 
 void Spatial::update_neutraliseurs(int d, int r, int p)

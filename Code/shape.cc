@@ -73,7 +73,6 @@ void shape::draw_robotSpa(double rayon, double xc, double yc)
 void shape::draw_parti(double cote, double xc, double yc)
 {
 	graphic_draw_square(cote,xc,yc,RED,FILLED,GREY);
-	graphic_draw_square(cote*3,xc,yc,GREY,UNFILLED,GREY);
 }
 
 double shape::s2d_norm(S2d co)
