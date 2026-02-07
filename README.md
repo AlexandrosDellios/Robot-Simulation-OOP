@@ -1,4 +1,4 @@
-# 🐕 Robot cleanup simulation
+# 🤖 Robot cleanup simulation
 ![C++](https://img.shields.io/badge/C++-3670A0?style=for-the-badge&logo=cplusplus&logoColor=ffdd54)
 ![OOP](https://img.shields.io/badge/OOP-%23EE4C2C.svg?style=for-the-badge&logo=cmake&logoColor=white)
 
@@ -14,7 +14,7 @@ The Spatial class, which tracks the update count and the various robot types, in
 
 
 
-## 🧪 Data Structuring of Model Entities
+## 💾 Data Structuring of Model Entities
 The Simulation class manages the primary data structures, containing vectors for the neutralizer robots, repairer robots, particles, and the spatial robot. This class also handles state persistence by storing the filename currently in use. The Particle class utilizes the Square structure from the Shape module, featuring a constructor for initialization and a getter for spatial data access.
 
 We implemented a global simulation instance within the Simulation module, allowing various functions to access the state without passing instances as arguments. This design choice facilitates a clean separation between the core logic and the GUI module responsible for the user interface.
