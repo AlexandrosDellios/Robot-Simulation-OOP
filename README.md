@@ -1,8 +1,45 @@
-La hiérarchie de classe des robots :
-Les trois robots (Neutraliseur, Reparateur et Spatial) sont des sous-classes de la superclasse Robot. Celle-ci met en œuvre la structure de donnée Cercle du module Shape, en particulier son constructeur et « getter ». Chaque sous-classe défini son constructeur spécifique en rajoutant l’initialisation d’attributs spécifiques supplémentaires. La classe Spatial qui mémorise le nombre de mise à jour et de différents robots possède comme attribut une structure organisée de ces données (data). Finalement, nous avons choisi de ne pas faire de polymorphisme car nous utilisons la surcharge de fonction pour le dessin des robots (draw_Robot).
-La structuration des données des autres entités du Modèle :
-La classe Simulation possède en tant qu’attributs les vecteurs de robots neutraliseurs, reparateurs, les particules et le robot spatial. C’est aussi dans cette classe que l’on mémorise filename le nom du fichier en cours d’utilisation. Puis la classe Particule possède simplement comme attribut la structure Carre du module Shape, un constructeur permettant de l’initialiser et un getter pour accéder au carré.
-Nous avons décidé de garder une instance simulation globale au module Simulation. Les différentes fonctions pouvant y accéder sans se passer l’instance par arguments. Ceci nous permet de la séparer le module GUI qui s’occupe de l’interface.
-Brève description des types mis en œuvre dans Shape : Les trois types mis en œuvre dans Shape sont :
-o S2dquipermetseulementdereprésenterdescoordonnéescartésienne(attributs:xety). o Carre qui propose le centre du carré de type S2d et la taille du côté du carre.
-o Cercle met en œuvre également les coordonnées du centre et le rayon de celui-ci.
+# 🐕 Quadrupedal Locomotion via Deep RL & CPG
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white)
+![ROS2](https://img.shields.io/badge/ros2-%230A0FF9.svg?style=for-the-badge&logo=ros&logoColor=white)
+
+> **Bridging the Sim-to-Real gap** for legged robots using Curricular Domain Randomization and Bio-inspired Control.
+
+---
+
+## 📺 Demo
+![Gait Demo](your-cool-gif-link-here.gif)
+*Caption: Quadruped traversing a 20° slope with randomized friction.*
+
+## 🧠 Technical Overview
+This project implements a robust locomotion stack for a quadruped robot in **Pybullet**. The core challenge was balancing stability with energy efficiency.
+
+### 🏗️ Control Architecture
+I compared three distinct action spaces to evaluate learning efficiency:
+1. **Hopf-oscillator CPG:** A bio-inspired rhythmic generator.
+2. [cite_start]**Cartesian-space PD:** For precise foot-end effector control[cite: 18].
+3. **Joint-space PD:** Standard actuator control.
+
+
+
+### 🧪 Reinforcement Learning
+[cite_start]Utilizing **PPO** and **SAC** (Stable Baselines3), the agent was trained using a multi-objective reward function[cite: 19]:
+
+$$R = w_1 \cdot \text{tracking\_error} - w_2 \cdot \text{energy\_cost} - w_3 \cdot \text{impact\_forces}$$
+
+## 🚀 Key Features
+* [cite_start]**Sim-to-Real Bridge:** Used **Curricular Domain Randomization** (varying friction $\mu \in [0.2, 1.2]$ and sensor noise) to ensure policy robustness[cite: 20].
+* [cite_start]**State Estimation:** Integrated an **EKF** to fuse IMU data with wheel-speed odometry[cite: 35].
+* **Modular Codebase:** Clean C++/Python architecture with automated builds via **Makefile**.
+
+## 💻 Installation & Usage
+```bash
+# Clone the repo
+git clone [https://github.com/your-username/legged-robotics.git](https://github.com/your-username/legged-robotics.git)
+cd legged-robotics
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the simulation
+python main.py --mode test --policy ppo_cpg
