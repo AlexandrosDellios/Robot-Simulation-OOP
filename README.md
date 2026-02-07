@@ -1,0 +1,8 @@
+La hiérarchie de classe des robots :
+Les trois robots (Neutraliseur, Reparateur et Spatial) sont des sous-classes de la superclasse Robot. Celle-ci met en œuvre la structure de donnée Cercle du module Shape, en particulier son constructeur et « getter ». Chaque sous-classe défini son constructeur spécifique en rajoutant l’initialisation d’attributs spécifiques supplémentaires. La classe Spatial qui mémorise le nombre de mise à jour et de différents robots possède comme attribut une structure organisée de ces données (data). Finalement, nous avons choisi de ne pas faire de polymorphisme car nous utilisons la surcharge de fonction pour le dessin des robots (draw_Robot).
+La structuration des données des autres entités du Modèle :
+La classe Simulation possède en tant qu’attributs les vecteurs de robots neutraliseurs, reparateurs, les particules et le robot spatial. C’est aussi dans cette classe que l’on mémorise filename le nom du fichier en cours d’utilisation. Puis la classe Particule possède simplement comme attribut la structure Carre du module Shape, un constructeur permettant de l’initialiser et un getter pour accéder au carré.
+Nous avons décidé de garder une instance simulation globale au module Simulation. Les différentes fonctions pouvant y accéder sans se passer l’instance par arguments. Ceci nous permet de la séparer le module GUI qui s’occupe de l’interface.
+Brève description des types mis en œuvre dans Shape : Les trois types mis en œuvre dans Shape sont :
+o S2dquipermetseulementdereprésenterdescoordonnéescartésienne(attributs:xety). o Carre qui propose le centre du carré de type S2d et la taille du côté du carre.
+o Cercle met en œuvre également les coordonnées du centre et le rayon de celui-ci.
