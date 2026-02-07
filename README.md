@@ -1,5 +1,5 @@
 # 🐕 Robot cleanup simulation
-![C++](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![C++](https://img.shields.io/badge/C++-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![OOP](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white)
 
 > **Bridging the Sim-to-Real gap** for legged robots using Curricular Domain Randomization and Bio-inspired Control.
